@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "712452224172-c603rkcjrnl73fsp3ipqbr7i6j6qgqur.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.derich.dondeva",
+            "certificate_hash": "7fd4e3a1b95de1ee15046097487bb57a8da47691"
+          }
+        },
+        {
           "client_id": "712452224172-804vt6uq9rqhvtsplcmbcf7pm4bege3l.apps.googleusercontent.com",
           "client_type": 3
         }

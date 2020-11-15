@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.derich.dondeva.R;
-import com.derich.dondeva.ui.gallery.GalleryFragment;
+import com.derich.dondeva.ui.requests.RequestsFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -242,12 +242,9 @@ public class HomeFragment extends Fragment implements ServicesOfferedAdapter.OnI
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case 1:
-                //Do stuff
-                Toast.makeText(mContext, "View", Toast.LENGTH_LONG).show();
-//                    AddImageDialog();
                 Bundle args = new Bundle();
                 AppCompatActivity activity = (AppCompatActivity) mContext;
-                Fragment fragmentStaff = new GalleryFragment();
+                Fragment fragmentStaff = new RequestsFragment();
                 FragmentTransaction transactionStaff = activity.getSupportFragmentManager().beginTransaction();
                 transactionStaff.replace(R.id.nav_host_fragment,fragmentStaff);
                 transactionStaff.addToBackStack(null);

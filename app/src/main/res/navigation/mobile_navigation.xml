@@ -12,14 +12,25 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.derich.dondeva.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_requests"
+        android:name="com.derich.dondeva.ui.requests.RequestsFragment"
+        android:label="@string/menu_requests"
+        tools:layout="@layout/fragment_requests" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.derich.dondeva.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_favourites"
+        android:name="com.derich.dondeva.ui.favourites.FavouritesFragment"
+        android:label="@string/menu_favourites"
+        tools:layout="@layout/fragment_favourites" />
+    <fragment
+        android:id="@+id/nav_help"
+        android:name="com.derich.dondeva.ui.help.HelpFragment"
+        android:label="@string/menu_help"
+        tools:layout="@layout/fragment_help" />
+
+    <fragment
+        android:id="@+id/nav_account"
+        android:name="com.derich.dondeva.ui.account.AccountFragment"
+        android:label="@string/menu_account"
+        tools:layout="@layout/fragment_account" />
 </navigation>

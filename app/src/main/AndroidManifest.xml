@@ -9,15 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DonDeva">
-        <activity android:name=".MainActivity"
-            android:screenOrientation="portrait"
+        <activity android:name=".LoginActivity"></activity>
+        <activity
+            android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.DonDeva.NoActionBar">
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SplashActivity"
-            android:screenOrientation="portrait"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.DonDeva.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

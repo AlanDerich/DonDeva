@@ -2,25 +2,19 @@ package com.derich.dondeva.ui.home;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.derich.dondeva.R;
-import com.derich.dondeva.ui.gallery.GalleryFragment;
 
 import java.io.File;
 import java.util.List;
@@ -57,7 +51,6 @@ public class ServicesOfferedAdapter extends RecyclerView.Adapter<ServicesOffered
                 .load(mServices.get(position).getServicePic())
                 .into(holder.imgCategory);
         holder.mainLayout.setOnClickListener(view -> {
-            Toast.makeText(mContext, "On click called!", Toast.LENGTH_LONG).show();
             onItemsClickListener.onItemsClick(mServices.get(position));
         });
     }
