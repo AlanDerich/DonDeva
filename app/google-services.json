@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "712452224172",
+    "firebase_url": "https://jamaa-a501c.firebaseio.com",
+    "project_id": "jamaa-a501c",
+    "storage_bucket": "jamaa-a501c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:712452224172:android:9de7dc6bc2b86975471b09",
+        "android_client_info": {
+          "package_name": "com.derich.dondeva"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "712452224172-804vt6uq9rqhvtsplcmbcf7pm4bege3l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvphrXxUBLYjNNonOA5FhS6SmDWKAcBY0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "712452224172-804vt6uq9rqhvtsplcmbcf7pm4bege3l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

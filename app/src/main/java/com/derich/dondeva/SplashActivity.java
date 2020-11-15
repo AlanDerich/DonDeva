@@ -3,7 +3,6 @@ package com.derich.dondeva;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.VideoView;
@@ -21,11 +20,7 @@ public class SplashActivity extends AppCompatActivity {
         Uri video = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.dondeva);
         videoView.setVideoURI(video);
 
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            public void onCompletion(MediaPlayer mp) {
-                startNextActivity();
-            }
-        });
+        videoView.setOnCompletionListener(mp -> startNextActivity());
 
         videoView.start();
     }
