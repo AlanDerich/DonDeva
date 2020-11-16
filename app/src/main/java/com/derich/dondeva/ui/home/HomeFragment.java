@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,7 +27,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.derich.dondeva.R;
+import com.derich.dondeva.UserDetails;
 import com.derich.dondeva.ui.requests.RequestsFragment;
+import com.derich.dondeva.ui.specificservice.SpecificServiceFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -70,17 +73,23 @@ public class HomeFragment extends Fragment implements ServicesOfferedAdapter.OnI
     private String plotIMage;
     private Services mServFromAdapter;
     private Services mReplacingService;
+    private List<UserDetails> mUserr;
+    private String section;
+    private ProgressBar progressBar;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         mRecyclerView = root.findViewById(R.id.rv_services_offered);
         mRecyclerView.setVisibility(View.INVISIBLE);
+        progressBar = root.findViewById(R.id.progressBarServices);
         fabAdd=root.findViewById(R.id.fabAddService);
+        fabAdd.setVisibility(View.GONE);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         fabAdd.setOnClickListener(view -> showDialog());
         mContext= getActivity();
+        checkUser();
         registerForContextMenu(mRecyclerView);
         getServices();
         return root;
@@ -93,11 +102,13 @@ public class HomeFragment extends Fragment implements ServicesOfferedAdapter.OnI
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         mServices = new ArrayList<>();
                         if (!queryDocumentSnapshots.isEmpty()) {
-                            for (DocumentSnapshot snapshot : queryDocumentSnapshots)
+                            for (DocumentSnapshot snapshot : queryDocumentSnapshots){
                                 mServices.add(snapshot.toObject(Services.class));
+                            }
                         } else {
                             Toast.makeText(mContext, "No services found. Please add a new service", Toast.LENGTH_LONG).show();
                         }
+                        progressBar.setVisibility(View.GONE);
                         initRecyclerView();
                     }
                 })
@@ -144,7 +155,7 @@ public class HomeFragment extends Fragment implements ServicesOfferedAdapter.OnI
         });
 
         alertDialog.setView(add_menu_layout);
-        alertDialog.setIcon(R.drawable.imgg);
+        alertDialog.setIcon(R.drawable.don_deva);
         alertDialog.setPositiveButton("YES", (dialog, i) -> {
             if(plotIMage !=  null)
             {
@@ -242,16 +253,7 @@ public class HomeFragment extends Fragment implements ServicesOfferedAdapter.OnI
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case 1:
-                Bundle args = new Bundle();
-                AppCompatActivity activity = (AppCompatActivity) mContext;
-                Fragment fragmentStaff = new RequestsFragment();
-                FragmentTransaction transactionStaff = activity.getSupportFragmentManager().beginTransaction();
-                transactionStaff.replace(R.id.nav_host_fragment,fragmentStaff);
-                transactionStaff.addToBackStack(null);
-                args.putString("serviceName",mServFromAdapter.getServiceName());
-                args.putString("servicePic",mServFromAdapter.getServicePic());
-                fragmentStaff.setArguments(args);
-                transactionStaff.commit();
+               startViewFragment();
                 break;
 
             case 2:
@@ -266,12 +268,30 @@ public class HomeFragment extends Fragment implements ServicesOfferedAdapter.OnI
         return super.onContextItemSelected(item);
     }
 
+    private void startViewFragment() {
+        Bundle args = new Bundle();
+        AppCompatActivity activity = (AppCompatActivity) mContext;
+        Fragment fragmentStaff = new SpecificServiceFragment();
+        FragmentTransaction transactionStaff = activity.getSupportFragmentManager().beginTransaction();
+        transactionStaff.replace(R.id.nav_host_fragment,fragmentStaff);
+        transactionStaff.addToBackStack(null);
+        args.putString("serviceName",mServFromAdapter.getServiceName());
+        args.putString("servicePic",mServFromAdapter.getServicePic());
+        fragmentStaff.setArguments(args);
+        transactionStaff.commit();
+    }
+
     @Override
     public void onItemsClick(Services mServ) {
 //        view.showContextMenu();
         mServFromAdapter = mServ;
-        getView().setOnCreateContextMenuListener(this);
-        getView().showContextMenu();
+        if (mUser!=null && section.equals("admin")){
+            getView().setOnCreateContextMenuListener(this);
+            getView().showContextMenu();
+        }
+        else {
+            startViewFragment();
+        }
     }
     private void deleteItem(Services servTodelete) {
         db.collection("AllServices").document(servTodelete.getServiceName())
@@ -359,5 +379,63 @@ public class HomeFragment extends Fragment implements ServicesOfferedAdapter.OnI
                         Log.w(TAG, "Error deleting document", e);
                     }
                 });
+    }
+    private void checkUser() {
+        if (mUser!=null){
+        mUserr= new ArrayList<>();
+        final FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        db.collectionGroup("registeredUsers").whereEqualTo("username",mUser.getEmail()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
+                        mUserr.add(snapshot.toObject(UserDetails.class));
+                    }
+                    int size = mUserr.size();
+                    int position;
+                    if (size==1){
+                        position=0;
+                        UserDetails userDetails= mUserr.get(position);
+                        String namee=userDetails.getUsername();
+                        section = userDetails.getSection();
+                        if (section.equals("admin")){
+//                            Toast.makeText(mContext,"Admin Login",Toast.LENGTH_LONG).show();
+                            fabAdd.setVisibility(View.VISIBLE);
+                        }
+                        else if (section.equals("simpleUser")){
+//                            Toast.makeText(mContext,"Normal user Login",Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Toast.makeText(mContext,"Error validating details. Please login again",Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                } else {
+                    String username =mUser.getEmail();
+                    section = "simpleUser";
+                    UserDetails newUser = new UserDetails(username,section);
+                    Toast.makeText(mContext,"No data found.",Toast.LENGTH_LONG).show();
+                    db.collection("users").document("all users").collection("registeredUsers").document(mUser.getEmail())
+                            .set(newUser)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(mContext,"User added successfully",Toast.LENGTH_LONG).show();
+                                    section="simpleUser";
+                                }
+                            })
+                            .addOnFailureListener(e -> Toast.makeText(mContext,"Not saved. Try again later.",Toast.LENGTH_LONG).show());
+
+                }
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(mContext,"Something went terribly wrong." + e,Toast.LENGTH_LONG).show();
+                        Log.d("LoginAct","Error" + e);
+                    }
+                });
+    }
     }
 }

@@ -27,6 +27,11 @@
         android:name="com.derich.dondeva.ui.help.HelpFragment"
         android:label="@string/menu_help"
         tools:layout="@layout/fragment_help" />
+    <fragment
+        android:id="@+id/nav_specific_service"
+        android:name="com.derich.dondeva.ui.specificservice.SpecificServiceFragment"
+        android:label="Specific Service"
+        tools:layout="@layout/fragment_specific_service" />
 
     <fragment
         android:id="@+id/nav_account"
