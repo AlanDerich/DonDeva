@@ -1,17 +1,18 @@
 package com.derich.dondeva.ui.specificservice;
 
 public class SpecificService {
-    String ssName,ssPic,ssRequirements,ssRequirementsPrice,ssServiceTime,ssServiceFee;
+    String ssName,ssPic,ssRequirements,ssRequirementsPrice,ssServiceHours,ssServiceMinutes,ssServiceFee;
 
     public SpecificService() {
     }
 
-    public SpecificService(String ssName, String ssPic, String ssRequirements, String ssRequirementsPrice, String ssServiceTime, String ssServiceFee) {
+    public SpecificService(String ssName, String ssPic, String ssRequirements, String ssRequirementsPrice, String ssServiceHours, String ssServiceMinutes, String ssServiceFee) {
         this.ssName = ssName;
         this.ssPic = ssPic;
         this.ssRequirements = ssRequirements;
         this.ssRequirementsPrice = ssRequirementsPrice;
-        this.ssServiceTime = ssServiceTime;
+        this.ssServiceHours = ssServiceHours;
+        this.ssServiceMinutes = ssServiceMinutes;
         this.ssServiceFee = ssServiceFee;
     }
 
@@ -47,12 +48,20 @@ public class SpecificService {
         this.ssRequirementsPrice = ssRequirementsPrice;
     }
 
-    public String getSsServiceTime() {
-        return ssServiceTime;
+    public String getSsServiceHours() {
+        return ssServiceHours;
     }
 
-    public void setSsServiceTime(String ssServiceTime) {
-        this.ssServiceTime = ssServiceTime;
+    public void setSsServiceHours(String ssServiceHours) {
+        this.ssServiceHours = ssServiceHours;
+    }
+
+    public String getSsServiceMinutes() {
+        return ssServiceMinutes;
+    }
+
+    public void setSsServiceMinutes(String ssServiceMinutes) {
+        this.ssServiceMinutes = ssServiceMinutes;
     }
 
     public String getSsServiceFee() {

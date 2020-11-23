@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.derich.dondeva.ui.requests.RequestsFragment;
+import com.derich.dondeva.ui.specificservice.SpecificServiceFragment;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -16,7 +18,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -25,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseUser mUser= FirebaseAuth.getInstance().getCurrentUser();
+    private Toolbar mTopToolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
     @Override
@@ -55,17 +61,26 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     Toast.makeText(MainActivity.this, "You are not logged in!", Toast.LENGTH_LONG).show();
                 }
+                break;
+                case R.id.action_requests:
+                    Bundle args = new Bundle();
+                    AppCompatActivity activity = (AppCompatActivity) this;
+                    Fragment fragmentStaff = new RequestsFragment();
+                    FragmentTransaction transactionStaff = activity.getSupportFragmentManager().beginTransaction();
+                    transactionStaff.replace(R.id.nav_host_fragment,fragmentStaff);
+                    transactionStaff.addToBackStack(null);
+                    fragmentStaff.setArguments(args);
+                    transactionStaff.commit();
+                    break;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
     public void signOut() {
         AuthUI.getInstance()
                 .signOut(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(MainActivity.this, "Logged out successfully!", Toast.LENGTH_LONG).show();
-                    }
-                });
+                .addOnCompleteListener(task -> Toast.makeText(MainActivity.this, "Logged out successfully!", Toast.LENGTH_LONG).show());
     }
 }

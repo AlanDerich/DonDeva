@@ -25,14 +25,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
+import com.derich.dondeva.OfferDetails;
+import com.derich.dondeva.ProductPagerAdapter;
 import com.derich.dondeva.R;
 import com.derich.dondeva.UserDetails;
-import com.derich.dondeva.ui.requests.RequestsFragment;
+import com.derich.dondeva.ViewProductFragment;
 import com.derich.dondeva.ui.specificservice.SpecificServiceFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -57,25 +61,28 @@ public class HomeFragment extends Fragment implements ServicesOfferedAdapter.OnI
     ServicesOfferedAdapter mAdapter;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     List<Services> mServices;
-    List<String> cats = new ArrayList<>();
     Context mContext;
+    private ViewPager mProductContainer;
+    private TabLayout mTabLayout;
     MaterialEditText edtName;
     Button btnUpload, btnSelect;
     //widgets
     private RecyclerView mRecyclerView;
     private Services mNewService;
-    private FloatingActionButton fabAdd;
+    private FloatingActionButton fabAddOffer,fabAdd;
     Uri saveUri;
     FirebaseStorage storage;
     StorageReference storageReference;
     public static final int PICK_IMAGE_REQUEST = 71;
-    private FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+    private final FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+    private List<UserDetails> mUserr;
     private String plotIMage;
     private Services mServFromAdapter;
     private Services mReplacingService;
-    private List<UserDetails> mUserr;
+    private ProductPagerAdapter mPagerAdapter;
     private String section;
     private ProgressBar progressBar;
+    private List<OfferDetails> mAllOffers;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -83,7 +90,10 @@ public class HomeFragment extends Fragment implements ServicesOfferedAdapter.OnI
         mRecyclerView = root.findViewById(R.id.rv_services_offered);
         mRecyclerView.setVisibility(View.INVISIBLE);
         progressBar = root.findViewById(R.id.progressBarServices);
+        fabAddOffer=root.findViewById(R.id.fabAddOffer);
         fabAdd=root.findViewById(R.id.fabAddService);
+        mProductContainer = root.findViewById(R.id.product_container);
+        mTabLayout = root.findViewById(R.id.tab_layout);
         fabAdd.setVisibility(View.GONE);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -91,8 +101,92 @@ public class HomeFragment extends Fragment implements ServicesOfferedAdapter.OnI
         mContext= getActivity();
         checkUser();
         registerForContextMenu(mRecyclerView);
+        getAllOffers();
         getServices();
+        fabAddOffer.setOnClickListener(view -> addOffer());
         return root;
+    }
+
+    private void addOffer() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        alertDialog.setTitle("Add new Offer");
+        alertDialog.setMessage("Fill all the details.");
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        View add_menu_layout = inflater.inflate(R.layout.add_new_service_layout,null);
+
+        edtName = add_menu_layout.findViewById(R.id.edtServiceName);
+        edtName.setHint("Offer Name");
+        btnSelect = add_menu_layout.findViewById(R.id.btnProductSelect);
+        btnUpload = add_menu_layout.findViewById(R.id.btnUploadPic);
+        //event for button
+        btnSelect.setOnClickListener(v -> chooseImage());
+
+        btnUpload.setOnClickListener(v -> uploadImage());
+
+        alertDialog.setView(add_menu_layout);
+        alertDialog.setIcon(R.drawable.don_deva);
+        alertDialog.setPositiveButton("YES", (dialog, i) -> {
+            if(plotIMage !=  null)
+            {
+                OfferDetails mNewOffer = new OfferDetails(plotIMage,edtName.getText().toString(),"All Are Welcome");
+                db.collection("AllOffers").document(mNewOffer.getOfferName())
+                        .set(mNewOffer)
+                        .addOnSuccessListener(aVoid -> {
+//                                startActivity(new Intent(getContext(), MainActivityAdmin.class));
+                            Toast.makeText(getContext(),"Offer saved successfully",Toast.LENGTH_LONG).show();
+                            //initRecyclerView();
+                            getAllOffers();
+                        })
+                        .addOnFailureListener(e -> Toast.makeText(getContext(),"Not saved. Try again later.",Toast.LENGTH_LONG).show());
+            }
+            else {
+                Toast.makeText(mContext,"No image selected yet. Please upload an image to continue",Toast.LENGTH_LONG).show();
+            }
+            dialog.dismiss();
+        });
+
+        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                dialog.dismiss();
+            }
+        });
+        alertDialog.show();
+    }
+
+    private void getAllOffers() {
+        db.collectionGroup("AllOffers").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        mAllOffers = new ArrayList<>();
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            for (DocumentSnapshot snapshot : queryDocumentSnapshots){
+                                mAllOffers.add(snapshot.toObject(OfferDetails.class));
+                            }
+                        } else {
+//                            Toast.makeText(mContext, "No house photos added yet. photos you add will appear here", Toast.LENGTH_LONG).show();
+                        }
+                        initPagerAdapter();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(mContext, "Something went terribly wrong." + e, Toast.LENGTH_LONG).show();
+                    Log.w("HouseInfo", "error " + e);
+                });
+    }
+
+    private void initPagerAdapter(){
+        ArrayList<Fragment> fragments = new ArrayList<>();
+        OfferDetails products = new OfferDetails();
+        for(OfferDetails product: mAllOffers){
+            ViewProductFragment viewProductFragment = new ViewProductFragment(product);
+            fragments.add(viewProductFragment);
+        }
+        mPagerAdapter = new ProductPagerAdapter(getParentFragmentManager(), fragments);
+        mProductContainer.setAdapter(mPagerAdapter);
+        mTabLayout.setupWithViewPager(mProductContainer, true);
     }
     private void getServices(){
         //mProducts.addAll(Arrays.asList(Products.FEATURED_PRODUCTS));
@@ -269,6 +363,7 @@ public class HomeFragment extends Fragment implements ServicesOfferedAdapter.OnI
     }
 
     private void startViewFragment() {
+        unregisterForContextMenu(mRecyclerView);
         Bundle args = new Bundle();
         AppCompatActivity activity = (AppCompatActivity) mContext;
         Fragment fragmentStaff = new SpecificServiceFragment();

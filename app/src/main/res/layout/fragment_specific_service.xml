@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F3F1F1"
+    android:background="#FFFFFF"
     tools:context=".ui.specificservice.SpecificServiceFragment">
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_services_offered"
+        android:id="@+id/rv_products_offered"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F3F1F1"
+        android:background="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

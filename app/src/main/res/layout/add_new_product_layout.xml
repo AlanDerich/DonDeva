@@ -47,11 +47,13 @@
                 app:met_maxCharacters="25"
                 app:met_primaryColor="@color/colorPrimary"
                 app:met_singleLineEllipsis="true" />
+
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/edtRequirementsPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Requirements price"
+                android:inputType="number"
                 android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPrimary"
                 android:textSize="18sp"
@@ -73,11 +75,60 @@
                 app:met_maxCharacters="25"
                 app:met_primaryColor="@color/colorPrimary"
                 app:met_singleLineEllipsis="true" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Service Time:"
+                    />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/edtServiceHour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Hours"
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="18sp"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_maxCharacters="25"
+                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_singleLineEllipsis="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint=" : "
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="24sp" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/edtServiceMinute"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Minutes"
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="18sp"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_maxCharacters="25"
+                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_singleLineEllipsis="true" />
+
+            </LinearLayout>
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/edtServiceFee"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Service Fee"
+                android:inputType="number"
                 android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPrimary"
                 android:textSize="18sp"

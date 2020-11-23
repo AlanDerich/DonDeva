@@ -21,14 +21,14 @@
             android:weightSum="100">
 
             <androidx.viewpager.widget.ViewPager
-                android:id="@+id/specific_service_product_container"
+                android:id="@+id/product_container"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="50"
+                android:layout_weight="30"
                 android:clickable="true" />
 
             <com.google.android.material.tabs.TabLayout
-                android:id="@+id/specific_service_tab_layout"
+                android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="4dp"
                 android:layout_weight="1"
@@ -40,8 +40,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="49">
-
+                android:layout_weight="65">
                 <LinearLayout
                     android:id="@+id/specificServiceName"
                     android:layout_width="match_parent"
@@ -59,15 +58,13 @@
                         android:layout_marginEnd="5dp"
                         android:text="Name: "
                         android:textColor="#000"
-                        android:textSize="16sp" />
+                        android:textSize="15sp" />
 
                     <TextView
-                        android:id="@+id/edtServName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="Name"
-                        android:textSize="18sp" />
+                        android:text="Name" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -87,17 +84,14 @@
                         android:layout_marginEnd="5dp"
                         android:text="Requirements: "
                         android:textColor="#000"
-                        android:textSize="16sp" />
+                        android:textSize="15sp" />
 
                     <TextView
-                        android:id="@+id/edtServRequirements"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="Requirements"
-                        android:textSize="18sp" />
+                        android:text="Requirements" />
                 </LinearLayout>
-
                 <LinearLayout
                     android:id="@+id/specificServicerequirementsPrice"
                     android:layout_width="match_parent"
@@ -115,17 +109,14 @@
                         android:layout_marginEnd="5dp"
                         android:text="Requirements Price: "
                         android:textColor="#000"
-                        android:textSize="16sp" />
+                        android:textSize="15sp" />
 
                     <TextView
-                        android:id="@+id/edtServRequirementsPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="Requirements price"
-                        android:textSize="18sp" />
+                        android:text="Requirements price" />
                 </LinearLayout>
-
                 <LinearLayout
                     android:id="@+id/specificServiceTime"
                     android:layout_width="match_parent"
@@ -143,17 +134,14 @@
                         android:layout_marginEnd="5dp"
                         android:text="Service Time: "
                         android:textColor="#000"
-                        android:textSize="16sp" />
+                        android:textSize="15sp" />
 
                     <TextView
-                        android:id="@+id/edtServTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="Service time"
-                        android:textSize="18sp" />
+                        android:text="Service time" />
                 </LinearLayout>
-
                 <LinearLayout
                     android:id="@+id/specificServiceFee"
                     android:layout_width="match_parent"
@@ -171,16 +159,24 @@
                         android:layout_marginEnd="5dp"
                         android:text="Service Fee: "
                         android:textColor="#000"
-                        android:textSize="16sp" />
+                        android:textSize="15sp" />
 
                     <TextView
-                        android:id="@+id/edtServFee"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="Service fee"
-                        android:textSize="18sp" />
+                        android:text="Service fee" />
                 </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/progressBarServices"
+                    style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fabAddOffer"
@@ -194,19 +190,17 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:srcCompat="@drawable/ic_baseline_playlist_add_24" />
 
-                <Button
-                    android:id="@+id/buttonBookService"
-                    android:layout_width="0dp"
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabAddService"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:clickable="true"
-                    android:text="Book"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/specificServiceFee"
-                    app:layout_constraintVertical_bias="0.13" />
+                    app:srcCompat="@drawable/ic_baseline_playlist_add_24" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -214,6 +208,14 @@
 
 
     </ScrollView>
+
+
+    <FrameLayout
+        android:id="@+id/full_screen_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

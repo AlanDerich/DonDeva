@@ -29,12 +29,9 @@ import android.widget.Toast;
 
 import com.derich.dondeva.R;
 import com.derich.dondeva.UserDetails;
-import com.derich.dondeva.ui.home.Services;
 import com.derich.dondeva.ui.servicedetails.ServiceDetailsFragment;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -81,15 +78,12 @@ public class SpecificServiceFragment extends Fragment implements SpecificService
     private String section;
     private ProgressBar progressBar;
     private String serviceName;
-    private MaterialEditText edtServiceRequirements;
-    private MaterialEditText edtRequirementsPrice;
-    private MaterialEditText edtServiceTime;
-    private MaterialEditText edtServiceFee;
+    private MaterialEditText edtServiceRequirements,edtRequirementsPrice,edtServiceHours,edtServiceMinutes,edtServiceFee;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_specific_service, container, false);
-        mRecyclerView = root.findViewById(R.id.rv_services_offered);
+        mRecyclerView = root.findViewById(R.id.rv_products_offered);
         mRecyclerView.setVisibility(View.INVISIBLE);
         progressBar = root.findViewById(R.id.progressBarServices);
         fabAdd=root.findViewById(R.id.fabAddService);
@@ -112,7 +106,7 @@ public class SpecificServiceFragment extends Fragment implements SpecificService
     }
 
     private void getServices(){
-        db.collection(serviceName)
+        db.collection(serviceName+ " Products")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -157,7 +151,8 @@ public class SpecificServiceFragment extends Fragment implements SpecificService
         edtName = add_menu_layout.findViewById(R.id.edtServiceName);
         edtServiceRequirements = add_menu_layout.findViewById(R.id.edtServiceRequirements);
         edtRequirementsPrice = add_menu_layout.findViewById(R.id.edtRequirementsPrice);
-        edtServiceTime = add_menu_layout.findViewById(R.id.edtServiceTime);
+        edtServiceHours = add_menu_layout.findViewById(R.id.edtServiceHour);
+        edtServiceMinutes = add_menu_layout.findViewById(R.id.edtServiceMinute);
         edtServiceFee = add_menu_layout.findViewById(R.id.edtServiceFee);
         btnSelect = add_menu_layout.findViewById(R.id.btnProductSelect);
         btnUpload = add_menu_layout.findViewById(R.id.btnUploadPic);
@@ -186,9 +181,10 @@ public class SpecificServiceFragment extends Fragment implements SpecificService
                 mNewService.setSsPic(plotIMage);
                 mNewService.setSsRequirements(edtServiceRequirements.getText().toString());
                 mNewService.setSsRequirementsPrice(edtRequirementsPrice.getText().toString());
-                mNewService.setSsServiceTime(edtServiceTime.getText().toString());
+                mNewService.setSsServiceHours(edtServiceHours.getText().toString());
+                mNewService.setSsServiceMinutes(edtServiceMinutes.getText().toString());
                 mNewService.setSsServiceFee(edtServiceFee.getText().toString());
-                db.collection(serviceName).document(mNewService.getSsName())
+                db.collection(serviceName+ " Products").document(mNewService.getSsName())
                         .set(mNewService)
                         .addOnSuccessListener(aVoid -> {
 //                                startActivity(new Intent(getContext(), MainActivityAdmin.class));
@@ -268,9 +264,9 @@ public class SpecificServiceFragment extends Fragment implements SpecificService
     public void onCreateContextMenu(@NonNull ContextMenu contextMenu, @NonNull View view, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(contextMenu, view, menuInfo);
         contextMenu.setHeaderTitle("Select an action");
-        contextMenu.add(Menu.NONE, 1, 1, "View");
-        contextMenu.add(Menu.NONE, 2, 2, "Update");
-        contextMenu.add(Menu.NONE, 3, 3, "Delete");
+        contextMenu.add(Menu.NONE, 5, 5, "View");
+        contextMenu.add(Menu.NONE, 6, 6, "Update");
+        contextMenu.add(Menu.NONE, 7, 7, "Delete");
 
     }
 
@@ -278,15 +274,15 @@ public class SpecificServiceFragment extends Fragment implements SpecificService
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case 1:
+            case 5:
                 startViewFragment();
                 break;
 
-            case 2:
+            case 6:
                 //Do stuff
                 showUpdateDialog(mServFromAdapter);
                 break;
-            case 3:
+            case 7:
                 //Do stuff
                 deleteItem(mServFromAdapter);
                 break;
@@ -301,12 +297,14 @@ public class SpecificServiceFragment extends Fragment implements SpecificService
         FragmentTransaction transactionStaff = activity.getSupportFragmentManager().beginTransaction();
         transactionStaff.replace(R.id.nav_host_fragment,fragmentStaff);
         transactionStaff.addToBackStack(null);
+        args.putString("mainServiceName",serviceName);
         args.putString("serviceName",mServFromAdapter.getSsName());
         args.putString("servicePic",mServFromAdapter.getSsPic());
         args.putString("serviceRequirements",mServFromAdapter.getSsRequirements());
         args.putString("serviceRequirementsPrice",mServFromAdapter.getSsRequirementsPrice());
         args.putString("serviceFee",mServFromAdapter.getSsServiceFee());
-        args.putString("serviceTime",mServFromAdapter.getSsServiceTime());
+        args.putString("serviceHours",mServFromAdapter.getSsServiceHours());
+        args.putString("serviceMinutes",mServFromAdapter.getSsServiceMinutes());
         fragmentStaff.setArguments(args);
         transactionStaff.commit();
     }
@@ -324,7 +322,7 @@ public class SpecificServiceFragment extends Fragment implements SpecificService
         }
     }
     private void deleteItem(SpecificService servTodelete) {
-        db.collection(serviceName).document(servTodelete.getSsName())
+        db.collection(serviceName+ " Products").document(servTodelete.getSsName())
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -352,13 +350,22 @@ public class SpecificServiceFragment extends Fragment implements SpecificService
         View add_menu_layout = inflater.inflate(R.layout.add_new_product_layout,null);
 
         edtName = add_menu_layout.findViewById(R.id.edtServiceName);
+        edtName.setText(mServ.getSsName());
         edtServiceRequirements = add_menu_layout.findViewById(R.id.edtServiceRequirements);
+        edtServiceRequirements.setText(mServ.getSsRequirements());
         edtRequirementsPrice = add_menu_layout.findViewById(R.id.edtRequirementsPrice);
-        edtServiceTime = add_menu_layout.findViewById(R.id.edtServiceTime);
+        edtRequirementsPrice.setText(mServ.getSsRequirementsPrice());
+        edtServiceHours = add_menu_layout.findViewById(R.id.edtServiceHour);
+        edtServiceHours.setText(mServ.getSsServiceHours());
+        edtServiceMinutes = add_menu_layout.findViewById(R.id.edtServiceMinute);
+        edtServiceMinutes.setText(mServ.getSsServiceMinutes());
         edtServiceFee = add_menu_layout.findViewById(R.id.edtServiceFee);
+        edtServiceFee.setText(mServ.getSsServiceFee());
+        plotIMage=mServ.ssPic;
         btnSelect = add_menu_layout.findViewById(R.id.btnProductSelect);
         btnUpload = add_menu_layout.findViewById(R.id.btnUploadPic);
         //event for button
+        btnSelect.setText("IMAGE SELECTED");
         btnSelect.setOnClickListener(view -> chooseImage());
         btnUpload.setOnClickListener(view -> uploadImage());
         alertDialog.setView(add_menu_layout);
@@ -368,7 +375,7 @@ public class SpecificServiceFragment extends Fragment implements SpecificService
             public void onClick(DialogInterface dialog, int i) {
                 if(plotIMage !=  null)
                 {
-                    mReplacingService = new SpecificService(edtName.getText().toString(),plotIMage,edtServiceRequirements.getText().toString(),edtRequirementsPrice.getText().toString(),edtServiceTime.getText().toString(),edtServiceFee.getText().toString());
+                    mReplacingService = new SpecificService(edtName.getText().toString(),plotIMage,edtServiceRequirements.getText().toString(),edtRequirementsPrice.getText().toString(),edtServiceHours.getText().toString(),edtServiceMinutes.getText().toString(),edtServiceFee.getText().toString());
                     deleteService(mServFromAdapter,mReplacingService);
                 }
                 else {
@@ -387,11 +394,11 @@ public class SpecificServiceFragment extends Fragment implements SpecificService
         alertDialog.show();
     }
     private void deleteService(SpecificService servTodelete,SpecificService replacingService) {
-        db.collection(serviceName).document(servTodelete.getSsName())
+        db.collection(serviceName+ " Products").document(servTodelete.getSsName())
                 .delete()
                 .addOnSuccessListener(aVoid -> {
                     mNewService = replacingService;
-                    db.collection(serviceName).document(servTodelete.getSsName())
+                    db.collection(serviceName+ " Products").document(servTodelete.getSsName())
                             .set(mNewService)
                             .addOnSuccessListener(aVoid1 -> {
 

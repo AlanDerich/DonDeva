@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="HeaderBar">
+        <item name="android:background">#303F9F</item>
+    </style>
+    <style name="navigationDrawerTheme">
+        <!--        Color of text and icon when selected-->
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <!--        Background color when selected -->
+        <item name="colorControlHighlight">@color/colorAccent</item>
+    </style>
+</resources>

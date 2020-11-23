@@ -11,4 +11,18 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="whiteDark">#C6FFFFFF</color>
+    <color name="blueTeal">#13A9E9</color>
+    <color name="red">#F70505</color>
+    <color name="Grey">#c3c3c3 </color>
+    <color name="darkGrey">#a6a6a6 </color>
+    <color name="black_overlay">#66000000</color>
+    <color name="cream_chep">#E5B554</color>
+    <color name="buttonColor">#AC3D26</color>
+    <color name="brown_chep">#733C31</color>
+    <color name="whiteColor">#FFFFFF</color>
+    <color name="lightGrey">#EFEBEB</color>
+    <color name="emeralGreen">#25D690</color>
+    <color name="grey">#A2A2A3</color>
+    <color name="light_grey">#F2E4E0EA</color>
 </resources>
