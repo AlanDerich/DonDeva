@@ -8,11 +8,7 @@
         android:id="@+id/action_requests"
         android:icon="@drawable/ic_woman__4_"
         android:orderInCategory="300"
-        android:title="User"
-        app:showAsAction="ifRoom"></item>
-    <item
-        android:id="@+id/action_logout"
-        android:title="Log Out"
-        app:showAsAction="never" />
+        android:title="@string/user"
+        app:showAsAction="ifRoom" />
 
 </menu>

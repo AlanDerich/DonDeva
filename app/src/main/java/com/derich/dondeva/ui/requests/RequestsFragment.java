@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,12 +18,10 @@ import com.derich.dondeva.LoginActivity;
 import com.derich.dondeva.R;
 import com.derich.dondeva.RequestDetails;
 import com.derich.dondeva.UserDetails;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,20 +49,17 @@ public class RequestsFragment extends Fragment implements RequestsAdapter.OnItem
 
     private void getAllOrders() {
         db.collectionGroup("AllRequests").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        mAllOrders = new ArrayList<>();
-                        if (!queryDocumentSnapshots.isEmpty()) {
-                            for (DocumentSnapshot snapshot : queryDocumentSnapshots){
-                                mAllOrders.add(snapshot.toObject(RequestDetails.class));
-                            }
-                        } else {
-                            Toast.makeText(mContext, "No Orders found. Orders you add will appear here", Toast.LENGTH_LONG).show();
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    mAllOrders = new ArrayList<>();
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        for (DocumentSnapshot snapshot : queryDocumentSnapshots){
+                            mAllOrders.add(snapshot.toObject(RequestDetails.class));
                         }
-                        initRecyclerview();
-
+                    } else {
+                        Toast.makeText(mContext, "No Orders found. Orders you add will appear here", Toast.LENGTH_LONG).show();
                     }
+                    initRecyclerview();
+
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(mContext, "Something went terribly wrong." + e, Toast.LENGTH_LONG).show();
@@ -75,7 +69,7 @@ public class RequestsFragment extends Fragment implements RequestsAdapter.OnItem
 
     private void initRecyclerview() {
         mAdapter = new RequestsAdapter(mAllOrders,this,section);
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
+//        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(mContext);
         rvOffers.setLayoutManager(linearLayoutManager);
         rvOffers.setAdapter(mAdapter);
@@ -122,20 +116,17 @@ public class RequestsFragment extends Fragment implements RequestsAdapter.OnItem
 
     private void getUserOrders() {
         db.collectionGroup("AllRequests").whereEqualTo("username",mUser.getEmail()).get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        mAllOrders = new ArrayList<>();
-                        if (!queryDocumentSnapshots.isEmpty()) {
-                            for (DocumentSnapshot snapshot : queryDocumentSnapshots){
-                                mAllOrders.add(snapshot.toObject(RequestDetails.class));
-                            }
-                        } else {
-                            Toast.makeText(mContext, "No Orders found. Orders you add will appear here", Toast.LENGTH_LONG).show();
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    mAllOrders = new ArrayList<>();
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        for (DocumentSnapshot snapshot : queryDocumentSnapshots){
+                            mAllOrders.add(snapshot.toObject(RequestDetails.class));
                         }
-                        initRecyclerview();
-
+                    } else {
+                        Toast.makeText(mContext, "No Orders found. Orders you add will appear here", Toast.LENGTH_LONG).show();
                     }
+                    initRecyclerview();
+
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(mContext, "Something went terribly wrong." + e, Toast.LENGTH_LONG).show();
@@ -145,7 +136,7 @@ public class RequestsFragment extends Fragment implements RequestsAdapter.OnItem
 
     @Override
     public void onItemsClick(RequestDetails mServ) {
-        RequestDetails mRequestDetails=new RequestDetails(mServ.getDate(),mServ.getStartTime(),mServ.getEndTime(),mServ.getRequirementsAmount(),mServ.getTotalAmount(),mServ.getServiceName(),mServ.getUsername(),mServ.getRequestDate(),mServ.getImage(),"Approved");
+        RequestDetails mRequestDetails=new RequestDetails(mServ.getDate(),mServ.getStartTime(),mServ.getServiceName(),mServ.getUsername(),mServ.getRequestDate(),mServ.getImage(),"Approved");
         db.collection("RequestsStorage").document(encode(mServ.getDate())).collection("AllRequests").document(mServ.getUsername()+" " +mServ.getServiceName())
                 .set(mRequestDetails)
                 .addOnSuccessListener(aVoid -> {

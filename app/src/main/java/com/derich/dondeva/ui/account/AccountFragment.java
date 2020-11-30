@@ -2,7 +2,6 @@ package com.derich.dondeva.ui.account;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,6 +12,7 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,8 +29,6 @@ import com.derich.dondeva.LoginActivity;
 import com.derich.dondeva.MainActivity;
 import com.derich.dondeva.R;
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -47,8 +45,7 @@ public class AccountFragment extends Fragment {
     private ImageView imgProfile;
     private String m_text;
     private final int PICK_IMAGE_REQUEST = 71;
-    private Uri filePath;
-    private static int PERMISSION_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private static final int PERMISSION_REQUEST_ACCESS_FINE_LOCATION = 1;
     private Context mContext;
 
     public AccountFragment() {
@@ -64,10 +61,12 @@ public class AccountFragment extends Fragment {
         Verify = view.findViewById(R.id.tvVerify);
         imgProfile = view.findViewById(R.id.imageView_prof_pic);
         tvPassword = view.findViewById(R.id.tvPassword);
+        Button logout = view.findViewById(R.id.buttonLogout);
         // Inflate the layout for this fragment
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         mContext = getContext();
         checkLogIn();
+        logout.setOnClickListener(view1 -> logOut());
         return view;
     }
 
@@ -88,32 +87,26 @@ public class AccountFragment extends Fragment {
             Uri photoUrl = mUser.getPhotoUrl();
             boolean emailVerified = mUser.isEmailVerified();
             if (emailVerified){
-                Verify.setText("Verified");
+                Verify.setText(R.string.verified);
             }
             else {
 
-                Verify.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (mUser.getEmail().isEmpty()){
-                            Toast.makeText(getContext(),"Please add an email address to continue",Toast.LENGTH_LONG).show();
-                        }
-                        else {
-                            mUser.sendEmailVerification()
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Toast.makeText(getContext(), "Verification Email sent. Please verify and login again to continue",Toast.LENGTH_SHORT).show();
-                                                logOut();
-
-                                            }
-                                            else {
-                                                Toast.makeText(getContext(), "Email not sent. Try again later.",Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-                                    });}
+                Verify.setOnClickListener(view -> {
+                    if (mUser.getEmail().isEmpty()){
+                        Toast.makeText(getContext(),"Please add an email address to continue",Toast.LENGTH_LONG).show();
                     }
+                    else {
+                        mUser.sendEmailVerification()
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(getContext(), "Verification Email sent. Please verify and login again to continue",Toast.LENGTH_SHORT).show();
+                                        logOut();
+
+                                    }
+                                    else {
+                                        Toast.makeText(getContext(), "Email not sent. Try again later.",Toast.LENGTH_SHORT).show();
+                                    }
+                                });}
                 });
             }
             //String uid = mUser.getUid();
@@ -128,92 +121,58 @@ public class AccountFragment extends Fragment {
             if (photoUrl != null && !Uri.EMPTY.equals(photoUrl)){
                 Glide.with(this).load(photoUrl).into(imgProfile);
             }
-            imgProfile.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Alert!");
-                    final TextView tvChange = new TextView(getContext());
-                    tvChange.setTextSize(22);
-                    tvChange.setText("Change profile picture");
-                    tvChange.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            chooseImage();
-                        }
-                    });
-                    builder.setView(tvChange);
-                    builder.show();
+            imgProfile.setOnClickListener(view -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Alert!");
+                final TextView tvChange = new TextView(getContext());
+                tvChange.setTextSize(22);
+                tvChange.setText(R.string.change_profile_picture);
+                tvChange.setOnClickListener(v -> chooseImage());
+                builder.setView(tvChange);
+                builder.show();
 
-                }
             });
-            tvName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    EditNameInfo();
-                }
-            });
-            tvEmail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    EditEmail();
-                }
-            });
-            tvPassword.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    m_text = "";
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Email Address");
+            tvName.setOnClickListener(view -> EditNameInfo());
+            tvEmail.setOnClickListener(view -> EditEmail());
+            tvPassword.setOnClickListener(view -> {
+                m_text = "";
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Email Address");
 
 // Set up the input
-                    final EditText input = new EditText(getContext());
+                final EditText input = new EditText(getContext());
 // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-                    input.setText(mUser.getEmail());
-                    input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-                    builder.setView(input);
+                input.setText(mUser.getEmail());
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                builder.setView(input);
 
 // Set up the buttons
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            m_text = input.getText().toString();
-                            mUser = FirebaseAuth.getInstance().getCurrentUser();
-                            FirebaseAuth auth = FirebaseAuth.getInstance();
-                            if (!(mUser.getEmail().isEmpty())){
-                                auth.sendPasswordResetEmail(mUser.getEmail())
+                builder.setPositiveButton("OK", (dialog, which) -> {
+                    m_text = input.getText().toString();
+                    mUser = FirebaseAuth.getInstance().getCurrentUser();
+                    FirebaseAuth auth = FirebaseAuth.getInstance();
+                    if (!(mUser.getEmail().isEmpty())){
+                        auth.sendPasswordResetEmail(mUser.getEmail())
 
 
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(getContext(),"Reset password email sent. Tap on the email to verify and then login",Toast.LENGTH_SHORT).show();
+                                        signOut();
+                                    }
+                                    else {
+                                        Toast.makeText(getContext(),"Sorry an error occured.",Toast.LENGTH_SHORT).show();
+                                    }
+                                });
 
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Toast.makeText(getContext(),"Reset password email sent. Tap on the email to verify and then login",Toast.LENGTH_SHORT).show();
-                                                    signOut();
-                                                }
-                                                else {
-                                                    Toast.makeText(getContext(),"Sorry an error occured.",Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        });
+                    }
+                    else {
+                        Toast.makeText(getContext(),"No email was inserted",Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
-                            }
-                            else {
-                                Toast.makeText(getContext(),"No email was inserted",Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                    });
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-
-                    builder.show();
-                }
+                builder.show();
             });
 
         }
@@ -222,11 +181,7 @@ public class AccountFragment extends Fragment {
     private void logOut() {
         AuthUI.getInstance()
                 .signOut(getContext())
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    public void onComplete(@NonNull Task<Void> task) {
-                        startActivity(new Intent(getContext(), LoginActivity.class));
-                    }
-                });
+                .addOnCompleteListener(task -> startActivity(new Intent(getContext(), LoginActivity.class)));
     }
 
     @Override
@@ -235,7 +190,7 @@ public class AccountFragment extends Fragment {
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null )
         {
-            filePath = data.getData();
+            Uri filePath = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), filePath);
                 imgProfile.setImageBitmap(bitmap);
@@ -244,17 +199,14 @@ public class AccountFragment extends Fragment {
                         .build();
 
                 mUser.updateProfile(profileUpdates)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(getContext(),"Profile pic updated successfully",Toast.LENGTH_SHORT).show();
-                                }
-                                else {
-                                    Toast.makeText(getContext(),"Sorry an error occured",Toast.LENGTH_SHORT).show();
-                                }
-                                refresh();
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(getContext(),"Profile pic updated successfully",Toast.LENGTH_SHORT).show();
                             }
+                            else {
+                                Toast.makeText(getContext(),"Sorry an error occured",Toast.LENGTH_SHORT).show();
+                            }
+                            refresh();
                         });
             }
             catch (IOException e)
@@ -276,38 +228,26 @@ public class AccountFragment extends Fragment {
         builder.setView(input);
 
 // Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                m_text = input.getText().toString();
-                mUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (!(m_text.isEmpty())) {
-                    mUser.updateEmail(m_text)
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            m_text = input.getText().toString();
+            mUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (!(m_text.isEmpty())) {
+                mUser.updateEmail(m_text)
 
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(getContext(), "Email updated successfully", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(getContext(), "Session expired. Please log out and login again to change email.", Toast.LENGTH_SHORT).show();
-                                    }
-                                    refresh();
-                                }
-                            });
-                }
-                else {
-                    Toast.makeText(getContext(), "No email inserted.", Toast.LENGTH_SHORT).show();
-                }
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(getContext(), "Email updated successfully", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getContext(), "Session expired. Please log out and login again to change email.", Toast.LENGTH_SHORT).show();
+                            }
+                            refresh();
+                        });
+            }
+            else {
+                Toast.makeText(getContext(), "No email inserted.", Toast.LENGTH_SHORT).show();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
         builder.show();
     }
@@ -324,40 +264,29 @@ public class AccountFragment extends Fragment {
         builder.setView(input);
 
 // Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                m_text = input.getText().toString();
-                mUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (!(m_text.isEmpty())) {
-                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                            .setDisplayName(m_text)
-                            .build();
-                    mUser.updateProfile(profileUpdates)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        refresh();
-                                        Toast.makeText(getContext(), "Username updated successfully", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(getContext(), "Session expired. Please log out and login again to change username.", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                }
-                else {
-                    Toast.makeText(getContext(),"Username cannot be empty",Toast.LENGTH_SHORT).show();
-                }
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            m_text = input.getText().toString();
+            mUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (!(m_text.isEmpty())) {
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                        .setDisplayName(m_text)
+                        .build();
+                mUser.updateProfile(profileUpdates)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                refresh();
+                                Toast.makeText(getContext(), "Username updated successfully", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getContext(), "Session expired. Please log out and login again to change username.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
+            else {
+                Toast.makeText(getContext(),"Username cannot be empty",Toast.LENGTH_SHORT).show();
+            }
 
-            }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
         builder.show();
     }
@@ -402,11 +331,9 @@ public class AccountFragment extends Fragment {
     private void signOut() {
         AuthUI.getInstance()
                 .signOut(getContext())
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Intent intent= new Intent(getContext(), MainActivity.class);
-                        startActivity(intent);
-                    }
+                .addOnCompleteListener(task -> {
+                    Intent intent= new Intent(getContext(), MainActivity.class);
+                    startActivity(intent);
                 });
     }
 }

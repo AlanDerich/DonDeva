@@ -64,10 +64,12 @@ public class SpecificServiceAdapter extends RecyclerView.Adapter<SpecificService
         holder.mainLayout.setOnClickListener(view -> {
             onItemsClickListener.onItemsClick(mServices.get(position));
         });
-        if (mFavorites.size()!=0){
-            for (String string : mFavorites) {
-                if(string.equals(mServices.get(position).getSsName())){
-                    holder.imbBtnFav.setImageResource(R.drawable.ic_favorited);
+        if (mFavorites!=null){
+            if (mFavorites.size()!=0){
+                for (String string : mFavorites) {
+                    if(string.equals(mServices.get(position).getSsName())){
+                        holder.imbBtnFav.setImageResource(R.drawable.ic_favorited);
+                    }
                 }
             }
         }

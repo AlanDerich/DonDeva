@@ -25,7 +25,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="50"
-                android:clickable="true" />
+                android:clickable="true"
+                android:focusable="true" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/specific_service_tab_layout"
@@ -57,7 +58,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="5dp"
-                        android:text="Name: "
+                        android:text="@string/name"
                         android:textColor="#000"
                         android:textSize="16sp" />
 
@@ -66,119 +67,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="Name"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/specificServicerequirements"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/specificServiceName">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="5dp"
-                        android:text="Requirements: "
-                        android:textColor="#000"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/edtServRequirements"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Requirements"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/specificServicerequirementsPrice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/specificServicerequirements">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="5dp"
-                        android:text="Requirements Price: "
-                        android:textColor="#000"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/edtServRequirementsPrice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Requirements price"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/specificServiceTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/specificServicerequirementsPrice">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="5dp"
-                        android:text="Service Time: "
-                        android:textColor="#000"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/edtServTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Service time"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/specificServiceFee"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/specificServiceTime">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="5dp"
-                        android:text="Service Fee: "
-                        android:textColor="#000"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/edtServFee"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Service fee"
+                        android:text="@string/name"
                         android:textSize="18sp" />
                 </LinearLayout>
 
@@ -192,21 +81,25 @@
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:srcCompat="@drawable/ic_baseline_playlist_add_24" />
+                    app:srcCompat="@drawable/ic_baseline_playlist_add_24"
+                    android:contentDescription="@string/add_offers"
+                    android:focusable="true" />
 
                 <Button
                     android:id="@+id/buttonBookService"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
+                    android:layout_marginTop="16dp"
                     android:layout_marginBottom="8dp"
                     android:clickable="true"
-                    android:text="Book"
+                    android:text="@string/book"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/specificServiceFee"
-                    app:layout_constraintVertical_bias="0.13" />
+                    app:layout_constraintTop_toBottomOf="@+id/specificServiceName"
+                    app:layout_constraintVertical_bias="0.0"
+                    android:focusable="true" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

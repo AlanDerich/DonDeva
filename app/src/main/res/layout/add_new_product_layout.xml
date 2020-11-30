@@ -25,110 +25,7 @@
                 android:id="@+id/edtServiceName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Service Name"
-                android:textColor="@color/colorPrimary"
-                android:textColorHint="@color/colorPrimary"
-                android:textSize="18sp"
-                app:met_baseColor="@color/colorPrimary"
-                app:met_floatingLabel="highlight"
-                app:met_maxCharacters="25"
-                app:met_primaryColor="@color/colorPrimary"
-                app:met_singleLineEllipsis="true" />
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/edtServiceRequirements"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Requirements"
-                android:textColor="@color/colorPrimary"
-                android:textColorHint="@color/colorPrimary"
-                android:textSize="18sp"
-                app:met_baseColor="@color/colorPrimary"
-                app:met_floatingLabel="highlight"
-                app:met_maxCharacters="25"
-                app:met_primaryColor="@color/colorPrimary"
-                app:met_singleLineEllipsis="true" />
-
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/edtRequirementsPrice"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Requirements price"
-                android:inputType="number"
-                android:textColor="@color/colorPrimary"
-                android:textColorHint="@color/colorPrimary"
-                android:textSize="18sp"
-                app:met_baseColor="@color/colorPrimary"
-                app:met_floatingLabel="highlight"
-                app:met_maxCharacters="25"
-                app:met_primaryColor="@color/colorPrimary"
-                app:met_singleLineEllipsis="true" />
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/edtServiceTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Service Time"
-                android:textColor="@color/colorPrimary"
-                android:textColorHint="@color/colorPrimary"
-                android:textSize="18sp"
-                app:met_baseColor="@color/colorPrimary"
-                app:met_floatingLabel="highlight"
-                app:met_maxCharacters="25"
-                app:met_primaryColor="@color/colorPrimary"
-                app:met_singleLineEllipsis="true" />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Service Time:"
-                    />
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/edtServiceHour"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="Hours"
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
-                    android:textSize="18sp"
-                    app:met_baseColor="@color/colorPrimary"
-                    app:met_floatingLabel="highlight"
-                    app:met_maxCharacters="25"
-                    app:met_primaryColor="@color/colorPrimary"
-                    app:met_singleLineEllipsis="true" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint=" : "
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
-                    android:textSize="24sp" />
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/edtServiceMinute"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="Minutes"
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
-                    android:textSize="18sp"
-                    app:met_baseColor="@color/colorPrimary"
-                    app:met_floatingLabel="highlight"
-                    app:met_maxCharacters="25"
-                    app:met_primaryColor="@color/colorPrimary"
-                    app:met_singleLineEllipsis="true" />
-
-            </LinearLayout>
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/edtServiceFee"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Service Fee"
-                android:inputType="number"
+                android:hint="@string/service_name"
                 android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPrimary"
                 android:textSize="18sp"
@@ -146,28 +43,28 @@
 
                 <Button
                     android:id="@+id/btnProductSelect"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_margin="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:background="#FFFFFF"
-                    android:text="Select Image"
+                    android:text="@string/select_image"
                     android:textColor="@android:color/widget_edittext_dark"
                     app:cornerRadius="5dp" />
 
                 <Button
                     android:id="@+id/btnUploadPic"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
+                    android:layout_height="match_parent"
                     android:layout_margin="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_weight="1"
-                    android:text="Update"
+                    android:text="@string/update"
                     android:textColor="@android:color/widget_edittext_dark"
                     app:cornerRadius="5dp" />
 

@@ -16,8 +16,14 @@ public class HelpFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_help, container, false);
-        final TextView textView = root.findViewById(R.id.text_dashboard);
-        textView.setText("Help fragment");
+        final TextView tvHelpContact = root.findViewById(R.id.edtHelpContact);
+        final TextView tvLocation = root.findViewById(R.id.edtHelpLocation);
+        final TextView tvSocial = root.findViewById(R.id.edtHelpSocial);
+        final TextView tvOpen = root.findViewById(R.id.edtHelpOpen);
+        tvHelpContact.setText(R.string.help_fragment);
+        tvLocation.setText(R.string.help_fragment);
+        tvSocial.setText(R.string.help_fragment);
+        tvOpen.setText(R.string.open_days);
         return root;
     }
 }

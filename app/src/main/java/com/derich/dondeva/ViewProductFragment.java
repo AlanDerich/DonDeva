@@ -22,8 +22,8 @@ public class ViewProductFragment extends Fragment {
 
     //widgets
     public ImageView mImageView;
-    private TextView mTitle;
-    private TextView mPrice;
+//    private TextView mTitle;
+//    private TextView mPrice;
 
     //vars
     public OfferDetails mProduct;
@@ -44,8 +44,8 @@ public class ViewProductFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_product, container, false);
         mImageView = view.findViewById(R.id.image);
-        mTitle = view.findViewById(R.id.title);
-        mPrice = view.findViewById(R.id.price);
+//        mTitle = view.findViewById(R.id.title);
+//        mPrice = view.findViewById(R.id.price);
 
         setProduct();
 
@@ -61,7 +61,7 @@ public class ViewProductFragment extends Fragment {
                 .load(mProduct.getPic())
                 .into(mImageView);
 
-        mTitle.setText(mProduct.getOfferName());
+//        mTitle.setText(mProduct.getOfferName());
 //        mPrice.setText(BigDecimalUtil.getValue(mProduct.getPrice()));
     }
 

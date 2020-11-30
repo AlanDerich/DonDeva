@@ -1,36 +1,23 @@
 package com.derich.dondeva;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
-import com.derich.dondeva.ui.requests.RequestsFragment;
-import com.derich.dondeva.ui.specificservice.SpecificServiceFragment;
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.appcompat.app.AppCompatActivity;
+
+import com.derich.dondeva.ui.requests.RequestsFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
-    private FirebaseUser mUser= FirebaseAuth.getInstance().getCurrentUser();
-    private Toolbar mTopToolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,34 +40,31 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_logout:
-                if (mUser!=null){
-                    signOut();
-                }
-                else {
-                    Toast.makeText(MainActivity.this, "You are not logged in!", Toast.LENGTH_LONG).show();
-                }
-                break;
-                case R.id.action_requests:
-                    Bundle args = new Bundle();
-                    AppCompatActivity activity = (AppCompatActivity) this;
-                    Fragment fragmentStaff = new RequestsFragment();
-                    FragmentTransaction transactionStaff = activity.getSupportFragmentManager().beginTransaction();
-                    transactionStaff.replace(R.id.nav_host_fragment,fragmentStaff);
-                    transactionStaff.addToBackStack(null);
-                    fragmentStaff.setArguments(args);
-                    transactionStaff.commit();
-                    break;
-
-            default:
-                return super.onOptionsItemSelected(item);
+        //            case R.id.action_logout:
+        //                if (mUser!=null){
+        //                    signOut();
+        //                }
+        //                else {
+        //                    Toast.makeText(MainActivity.this, "You are not logged in!", Toast.LENGTH_LONG).show();
+        //                }
+        //                break;
+        if (item.getItemId() == R.id.action_requests) {
+            Bundle args = new Bundle();
+            AppCompatActivity activity = this;
+            Fragment fragmentStaff = new RequestsFragment();
+            FragmentTransaction transactionStaff = activity.getSupportFragmentManager().beginTransaction();
+            transactionStaff.replace(R.id.nav_host_fragment, fragmentStaff);
+            transactionStaff.addToBackStack(null);
+            fragmentStaff.setArguments(args);
+            transactionStaff.commit();
+        } else {
+            return super.onOptionsItemSelected(item);
         }
         return super.onOptionsItemSelected(item);
     }
-    public void signOut() {
-        AuthUI.getInstance()
-                .signOut(this)
-                .addOnCompleteListener(task -> Toast.makeText(MainActivity.this, "Logged out successfully!", Toast.LENGTH_LONG).show());
-    }
+//    public void signOut() {
+//        AuthUI.getInstance()
+//                .signOut(this)
+//                .addOnCompleteListener(task -> Toast.makeText(MainActivity.this, "Logged out successfully!", Toast.LENGTH_LONG).show());
+//    }
 }
