@@ -26,6 +26,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,13 +58,25 @@ public class ServiceDetailsFragment extends Fragment {
         Button btnBook = root.findViewById(R.id.buttonBookService);
         mContext=getContext();
         getIncomingIntent();
-        if (section.equals("admin")){
-            btnBook.setVisibility(View.GONE);
+        if (section!=null){
+            if (section.equals("admin")){
+                btnBook.setVisibility(View.GONE);
+            }
+            else {
+                btnBook.setVisibility(View.VISIBLE);
+            }
+            btnBook.setOnClickListener(view -> showBookDialog());
         }
         else {
-            btnBook.setVisibility(View.VISIBLE);
+            btnBook.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(mContext,"Please login to continue",Toast.LENGTH_SHORT).show();
+                }
+            });
+
         }
-        btnBook.setOnClickListener(view -> showBookDialog());
+
         return root;
     }
 
@@ -119,26 +133,87 @@ public class ServiceDetailsFragment extends Fragment {
 
     private void chooseTime() {
 //        new TimePicker(new ContextThemeWrapper(getActivity(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar));
+        String time1= "08:00";
+        Date date1= null;
+        try {
+            date1 = new SimpleDateFormat("HH:mm").parse(time1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar calendar1= Calendar.getInstance();
+        calendar1.setTime(date1);
+        calendar1.add(Calendar.DATE,1);
+        String time2 ="22:00";
+        Date date2= null;
+        try {
+            date2 = new SimpleDateFormat("HH:mm").parse(time2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar calendar2= Calendar.getInstance();
+        calendar2.setTime(date2);
+        calendar2.add(Calendar.DATE,1);
         Calendar mcurrentTime = Calendar.getInstance();
         int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
         int minute = mcurrentTime.get(Calendar.MINUTE);
         TimePickerDialog mTimePicker;
-        mTimePicker = new TimePickerDialog(mContext,android.R.style.Theme_Holo_Light_Dialog_NoActionBar, (timePicker, selectedHour, selectedMinute) -> selectTime.setText( selectedHour + ":" + selectedMinute), hour, minute, true);//Yes 24 hour time
+        mTimePicker = new TimePickerDialog(mContext,android.R.style.Theme_Holo_Light_Dialog_NoActionBar, (timePicker, selectedHour, selectedMinute) ->
+                checkTime(selectedHour,selectedMinute,calendar1,calendar2), hour, minute, true);//Yes 24 hour time
         mTimePicker.setTitle("Select Time");
         mTimePicker.show();
     }
 
+    private void checkTime(int selectedHour, int selectedMinute,Calendar calendar1,Calendar calendar2) {
+        String timeX= selectedHour+":"+selectedMinute;
+        Date dateX= null;
+        try {
+            dateX = new SimpleDateFormat("HH:mm").parse(timeX);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar calendarX= Calendar.getInstance();
+        calendarX.setTime(dateX);
+        calendarX.add(Calendar.DATE,1);
+        Date x=calendarX.getTime();
+        if (x.after(calendar1.getTime()) && x.before(calendar2.getTime())){
+            selectTime.setText( String.format("%02d:%02d",selectedHour,selectedMinute));
+        }
+        else {
+            Toast.makeText(getContext(),"Open time is from 08:00-22:00",Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+//    private void checkTime() {
+//        selectTime.setText( String.format("%02d:%02d",selectedHour,selectedMinute))
+//    }
+
     private void chooseDate() {
         final Calendar mDate = Calendar.getInstance();
-
-//        DatePickerDialog datepickerdialog = new DatePickerDialog(getActivity(),
-//                DatePickerDialog.THEME_HOLO_LIGHT,this,year,month,day);
         DatePickerDialog.OnDateSetListener date = (datePicker, year, month, day) -> {
             mDate.set(Calendar.YEAR,year);
             mDate.set(Calendar.MONTH,month);
             mDate.set(Calendar.DAY_OF_MONTH,day);
             String format = "dd/MM/yyyy";
-            SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);selectDate.setText(sdf.format(mDate.getTime()));
+            SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
+            Calendar c = Calendar.getInstance();
+            c.set(Calendar.HOUR_OF_DAY,0);
+            c.set(Calendar.MINUTE,0);
+            c.set(Calendar.SECOND,0);
+            c.set(Calendar.MILLISECOND,0);
+            Date today= c.getTime();
+            if (mDate.before(today)){
+                Toast.makeText(mContext,"Please select a valid date",Toast.LENGTH_SHORT).show();
+            }
+            else {
+                if (mDate.get(Calendar.DAY_OF_WEEK)== Calendar.SUNDAY){
+                    Toast.makeText(mContext,"Sorry, We're closed on Sundays",Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    selectDate.setText(sdf.format(mDate.getTime()));
+                }
+
+            }
         };
         new DatePickerDialog(mContext,DatePickerDialog.THEME_HOLO_LIGHT,date,mDate.get(Calendar.YEAR),mDate.get(Calendar.MONTH),mDate.get(Calendar.DAY_OF_MONTH)).show();
     }

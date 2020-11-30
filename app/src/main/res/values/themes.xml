@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.DonDeva" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#162CF2</item>
-        <item name="colorPrimaryVariant">#00D9FF</item>
+        <item name="colorPrimary">#840AA6</item>
+        <item name="colorPrimaryVariant">#660D8C</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">#00D9FF</item>

@@ -90,6 +90,10 @@ public class FavouritesFragment extends Fragment implements SpecificServiceAdapt
                             mServices = new ArrayList<>();
                             getServices(pos);
                         }
+                        else {
+                            progressBar.setVisibility(View.GONE);
+                            Toast.makeText(mContext, "You haven't favorited any service.", Toast.LENGTH_LONG).show();
+                        }
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(mContext, "Something went terribly wrong." + e, Toast.LENGTH_LONG).show();

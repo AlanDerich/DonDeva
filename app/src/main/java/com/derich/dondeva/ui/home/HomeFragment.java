@@ -169,7 +169,8 @@ public class HomeFragment extends Fragment implements ServicesOfferedAdapter.OnI
         }
         ProductPagerAdapter mPagerAdapter = new ProductPagerAdapter(getParentFragmentManager(), fragments);
         mProductContainer.setAdapter(mPagerAdapter);
-        mTabLayout.setupWithViewPager(mProductContainer, true);
+//        mTabLayout.setupWithViewPager(mProductContainer,
+//                true);
     }
     private void getServices(){
         //mProducts.addAll(Arrays.asList(Products.FEATURED_PRODUCTS));

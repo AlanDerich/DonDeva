@@ -111,8 +111,8 @@ public class SpecificServiceFragment extends Fragment implements SpecificService
                             for (k=0;k<mFavorites.size();k++){
                                 mFavoriteNames.add(mFavorites.get(k).getServName());
                             }
-                            getServices();
                         }
+                        getServices();
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(mContext, "Something went terribly wrong." + e, Toast.LENGTH_LONG).show();
