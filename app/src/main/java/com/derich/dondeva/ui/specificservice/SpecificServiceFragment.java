@@ -364,7 +364,7 @@ public class SpecificServiceFragment extends Fragment implements SpecificService
                 .delete()
                 .addOnSuccessListener(aVoid -> {
                     mNewService = replacingService;
-                    db.collection(serviceName+ " Products").document(servTodelete.getSsName())
+                    db.collection(serviceName+ " Products").document(mNewService.getSsName())
                             .set(mNewService)
                             .addOnSuccessListener(aVoid1 -> {
 

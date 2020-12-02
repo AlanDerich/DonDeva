@@ -29,11 +29,7 @@ import java.util.List;
 public class SpecificServiceAdapter extends RecyclerView.Adapter<SpecificServiceAdapter.ViewHolder>{
     Context mContext;
     List<SpecificService> mServices;
-    private File localFile;
-    private Bitmap bmp;
-    private SpecificServiceAdapter.ViewHolder holder1;
     private SpecificServiceAdapter.OnItemsClickListener onItemsClickListener;
-    private int pos;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
     List<String> mFavorites;
