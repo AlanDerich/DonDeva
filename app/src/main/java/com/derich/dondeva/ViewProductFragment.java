@@ -1,10 +1,14 @@
 package com.derich.dondeva;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +18,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.derich.dondeva.ui.servicedetails.ServiceDetailsFragment;
+import com.derich.dondeva.ui.specificservice.SpecificService;
 
 
 public class ViewProductFragment extends Fragment {
@@ -24,12 +30,17 @@ public class ViewProductFragment extends Fragment {
     public ImageView mImageView;
 //    private TextView mTitle;
 //    private TextView mPrice;
-
+    private Context mContext;
     //vars
     public OfferDetails mProduct;
+    private String mSection;
+    private SpecificService mService;
+    private ConstraintLayout cvLayout;
 
-    public ViewProductFragment(OfferDetails product) {
+    public ViewProductFragment(OfferDetails product, SpecificService service,String section) {
         mProduct = product;
+        mSection = section;
+        mService= service;
     }
 
 
@@ -44,6 +55,14 @@ public class ViewProductFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_product, container, false);
         mImageView = view.findViewById(R.id.image);
+        mContext=getContext();
+        cvLayout=view.findViewById(R.id.cv_view_product_fragment);
+        cvLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDetailsFragment();
+            }
+        });
 //        mTitle = view.findViewById(R.id.title);
 //        mPrice = view.findViewById(R.id.price);
 
@@ -63,6 +82,20 @@ public class ViewProductFragment extends Fragment {
 
 //        mTitle.setText(mProduct.getOfferName());
 //        mPrice.setText(BigDecimalUtil.getValue(mProduct.getPrice()));
+    }
+    private void showDetailsFragment() {
+        Bundle args = new Bundle();
+        AppCompatActivity activity = (AppCompatActivity) mContext;
+        Fragment fragmentStaff = new ServiceDetailsFragment();
+        FragmentTransaction transactionStaff = activity.getSupportFragmentManager().beginTransaction();
+        transactionStaff.replace(R.id.nav_host_fragment,fragmentStaff);
+        transactionStaff.addToBackStack(null);
+        args.putString("mainServiceName",mService.getSsMainName());
+        args.putString("serviceName",mService.getSsName());
+        args.putString("servicePic",mService.getSsPic());
+        args.putString("section",mSection);
+        fragmentStaff.setArguments(args);
+        transactionStaff.commit();
     }
 
 

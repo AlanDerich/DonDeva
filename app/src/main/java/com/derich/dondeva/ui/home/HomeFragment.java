@@ -26,11 +26,14 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.derich.dondeva.AutoScrollViewPager;
 import com.derich.dondeva.OfferDetails;
 import com.derich.dondeva.ProductPagerAdapter;
 import com.derich.dondeva.R;
+import com.derich.dondeva.ServicePics;
 import com.derich.dondeva.UserDetails;
 import com.derich.dondeva.ViewProductFragment;
+import com.derich.dondeva.ui.specificservice.SpecificService;
 import com.derich.dondeva.ui.specificservice.SpecificServiceFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -38,6 +41,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -52,13 +56,15 @@ import static android.content.ContentValues.TAG;
 public class HomeFragment extends Fragment implements ServicesOfferedAdapter.OnItemsClickListener{
 
     private static final int NUM_COLUMNS = 2;
+    private static final int AUTO_SCROLL_THRESHOLD_IN_MILLI = 1000;
 
     //vars
     ServicesOfferedAdapter mAdapter;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     List<Services> mServices;
+    List<SpecificService> mSpecificServices;
     Context mContext;
-    private ViewPager mProductContainer;
+    private AutoScrollViewPager mProductContainer;
     private TabLayout mTabLayout;
     MaterialEditText edtName;
     Button btnUpload, btnSelect;
@@ -78,6 +84,9 @@ public class HomeFragment extends Fragment implements ServicesOfferedAdapter.OnI
     private String section;
     private ProgressBar progressBar;
     private List<OfferDetails> mAllOffers;
+    private List<String> servicesNamee;
+    private int k;
+    private int n=0;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -90,13 +99,13 @@ public class HomeFragment extends Fragment implements ServicesOfferedAdapter.OnI
         mProductContainer = root.findViewById(R.id.product_container);
         mTabLayout = root.findViewById(R.id.tab_layout);
         fabAdd.setVisibility(View.GONE);
+        mSpecificServices=new ArrayList<>();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         fabAdd.setOnClickListener(view -> showDialog());
         mContext= getActivity();
         checkUser();
         registerForContextMenu(mRecyclerView);
-        getAllOffers();
         getServices();
         fabAddOffer.setOnClickListener(view -> addOffer());
         return root;
@@ -145,33 +154,70 @@ public class HomeFragment extends Fragment implements ServicesOfferedAdapter.OnI
     }
 
     private void getAllOffers() {
-        db.collectionGroup("AllOffers").get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    mAllOffers = new ArrayList<>();
-                    if (!queryDocumentSnapshots.isEmpty()) {
-                        for (DocumentSnapshot snapshot : queryDocumentSnapshots){
-                            mAllOffers.add(snapshot.toObject(OfferDetails.class));
-                        }
-                    }
-                    initPagerAdapter();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(mContext, "Something went terribly wrong." + e, Toast.LENGTH_LONG).show();
-                    Log.w("HouseInfo", "error " + e);
-                });
-    }
+        servicesNamee = new ArrayList<>();
+        for(Services product: mServices){
+            String servName = product.getServiceName();
+            servicesNamee.add(servName);
+//            for (k =0; k <servicesNamee.size(); k++){
+//                getServicess(k);
+//            }
+//            ViewProductFragment viewProductFragment = new ViewProductFragment(product);
+//            fragments.add(viewProductFragment);
 
-    private void initPagerAdapter(){
-        ArrayList<Fragment> fragments = new ArrayList<>();
-        for(OfferDetails product: mAllOffers){
-            ViewProductFragment viewProductFragment = new ViewProductFragment(product);
-            fragments.add(viewProductFragment);
         }
-        ProductPagerAdapter mPagerAdapter = new ProductPagerAdapter(getParentFragmentManager(), fragments);
-        mProductContainer.setAdapter(mPagerAdapter);
-//        mTabLayout.setupWithViewPager(mProductContainer,
-//                true);
+        getServicess();
     }
+    private void getServicess(){
+        for (k =0; k <servicesNamee.size(); k++){
+            db.collection(servicesNamee.get(k)+ " Products")
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        n = n+1;
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                mSpecificServices.add(document.toObject(SpecificService.class));
+                            }
+                        } else {
+//                            Toast.makeText(mContext, "No products found", Toast.LENGTH_SHORT).show();
+                        }
+                        if ((n) ==servicesNamee.size()){
+                            ArrayList<Fragment> fragments = new ArrayList<>();
+                            for(SpecificService product: mSpecificServices){
+                                OfferDetails mkk=new OfferDetails(product.getSsPic(),product.getSsName(),product.getSsMainName());
+                                ViewProductFragment viewProductFragment = new ViewProductFragment(mkk,product,section);
+                                fragments.add(viewProductFragment);
+                            }
+                            ProductPagerAdapter mPagerAdapter = new ProductPagerAdapter(getParentFragmentManager(), fragments);
+                            mProductContainer.setAdapter(mPagerAdapter);
+                            mTabLayout.setupWithViewPager(mProductContainer);
+                            // start auto scroll
+                            mProductContainer.startAutoScroll();
+                            // set auto scroll time in mili
+                            mProductContainer.setInterval(AUTO_SCROLL_THRESHOLD_IN_MILLI);
+                            // enable recycling using true
+                            mProductContainer.setCycle(true);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(mContext, "Something went terribly wrong." + e, Toast.LENGTH_LONG).show();
+                        Log.w("SpecificService", "error " + e);
+                    });
+
+        }
+
+        //mProducts.addAll(Arrays.asList(Products.FEATURED_PRODUCTS));
+    }
+//    private void initPagerAdapter(){
+//        ArrayList<Fragment> fragments = new ArrayList<>();
+//        for(OfferDetails product: mAllOffers){
+//            ViewProductFragment viewProductFragment = new ViewProductFragment(product);
+//            fragments.add(viewProductFragment);
+//        }
+//        ProductPagerAdapter mPagerAdapter = new ProductPagerAdapter(getParentFragmentManager(), fragments);
+//        mProductContainer.setAdapter(mPagerAdapter);
+////        mTabLayout.setupWithViewPager(mProductContainer,
+////                true);
+//    }
     private void getServices(){
         //mProducts.addAll(Arrays.asList(Products.FEATURED_PRODUCTS));
         db.collectionGroup("AllServices").get()
@@ -181,6 +227,7 @@ public class HomeFragment extends Fragment implements ServicesOfferedAdapter.OnI
                         for (DocumentSnapshot snapshot : queryDocumentSnapshots){
                             mServices.add(snapshot.toObject(Services.class));
                         }
+                        getAllOffers();
                     } else {
                         Toast.makeText(mContext, "No services found. Please add a new service", Toast.LENGTH_LONG).show();
                     }
