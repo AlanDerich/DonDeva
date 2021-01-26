@@ -187,15 +187,17 @@ public class HomeFragment extends Fragment implements ServicesOfferedAdapter.OnI
                                 ViewProductFragment viewProductFragment = new ViewProductFragment(mkk,product,section);
                                 fragments.add(viewProductFragment);
                             }
-                            ProductPagerAdapter mPagerAdapter = new ProductPagerAdapter(getParentFragmentManager(), fragments);
-                            mProductContainer.setAdapter(mPagerAdapter);
-                            mTabLayout.setupWithViewPager(mProductContainer);
-                            // start auto scroll
-                            mProductContainer.startAutoScroll();
-                            // set auto scroll time in mili
-                            mProductContainer.setInterval(AUTO_SCROLL_THRESHOLD_IN_MILLI);
-                            // enable recycling using true
-                            mProductContainer.setCycle(true);
+                            if (isAdded()) {
+                                ProductPagerAdapter mPagerAdapter = new ProductPagerAdapter(getChildFragmentManager(), fragments);
+                                mProductContainer.setAdapter(mPagerAdapter);
+                                mTabLayout.setupWithViewPager(mProductContainer);
+                                // start auto scroll
+                                mProductContainer.startAutoScroll();
+                                // set auto scroll time in mili
+                                mProductContainer.setInterval(AUTO_SCROLL_THRESHOLD_IN_MILLI);
+                                // enable recycling using true
+                                mProductContainer.setCycle(true);
+                            }
                         }
                     })
                     .addOnFailureListener(e -> {

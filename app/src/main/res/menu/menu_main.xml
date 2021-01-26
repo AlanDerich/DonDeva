@@ -6,9 +6,9 @@
 
     <item
         android:id="@+id/action_requests"
-        android:icon="@drawable/ic_woman__4_"
+        android:icon="@drawable/ic_help"
         android:orderInCategory="300"
-        android:title="@string/user"
+        android:title="@string/menu_help"
         app:showAsAction="ifRoom" />
 
 </menu>

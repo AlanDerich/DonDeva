@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -44,6 +45,7 @@ public class ServiceDetailsFragment extends Fragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     Context mContext;
     private Button selectDate,selectTime;
+    private EditText edtTextPhone;
     private FirebaseUser mUser;
     private String section;
 
@@ -87,6 +89,7 @@ public class ServiceDetailsFragment extends Fragment {
         LayoutInflater inflater = this.getLayoutInflater();
         View book_layout = inflater.inflate(R.layout.book_layout,null);
         selectDate = book_layout.findViewById(R.id.buttonDate);
+        edtTextPhone= book_layout.findViewById(R.id.editTextPhoneRequest);
         selectTime = book_layout.findViewById(R.id.buttonTime);
         //event for button
         selectDate.setOnClickListener(v -> chooseDate());
@@ -97,19 +100,18 @@ public class ServiceDetailsFragment extends Fragment {
         selectTime.setTextColor(getResources().getColor(R.color.black));
         alertDialog.setView(book_layout);
         alertDialog.setIcon(R.drawable.don_deva);
-        alertDialog.setPositiveButton("YES", (dialog, i) -> {
-            String kkk=selectDate.getText().toString();
-            String mmm=selectTime.getText().toString();
-            if (kkk.equals("select date")||mmm.equals("select preferred start time")){
+        alertDialog.setPositiveButton("SEND", (dialog, i) -> {
+            String addDate=selectDate.getText().toString();
+            String addTime=selectTime.getText().toString();
+            String phoneNum=edtTextPhone.getText().toString();
+            if (addDate.equals("select date")||addTime.equals("select preferred start time")||phoneNum.equals("")){
                 Toast.makeText(mContext,"Please select a valid date and time",Toast.LENGTH_LONG).show();
             }
             else {
-                String addDate=selectDate.getText().toString();
-                String addTime=selectTime.getText().toString();
                 mUser = FirebaseAuth.getInstance().getCurrentUser();
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy",Locale.US);
                 final String dateOfAdd = sdf.format(new Date());
-                RequestDetails mRequestDetails=new RequestDetails(addDate,addTime,name, mUser.getEmail(),dateOfAdd,pic,"pending");
+                RequestDetails mRequestDetails=new RequestDetails(addDate,addTime,phoneNum,name, mUser.getEmail(),dateOfAdd,pic,"pending");
                 db.collection("RequestsStorage").document(encode(addDate)).collection("AllRequests").document(mUser.getEmail()+" " +name)
                         .set(mRequestDetails)
                         .addOnSuccessListener(aVoid -> {
@@ -133,7 +135,7 @@ public class ServiceDetailsFragment extends Fragment {
 
     private void chooseTime() {
 //        new TimePicker(new ContextThemeWrapper(getActivity(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar));
-        String time1= "08:00";
+        String time1= "07:59";
         Date date1= null;
         try {
             date1 = new SimpleDateFormat("HH:mm").parse(time1);
@@ -171,15 +173,49 @@ public class ServiceDetailsFragment extends Fragment {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        Calendar current= Calendar.getInstance();
         Calendar calendarX= Calendar.getInstance();
         calendarX.setTime(dateX);
         calendarX.add(Calendar.DATE,1);
         Date x=calendarX.getTime();
-        if (x.after(calendar1.getTime()) && x.before(calendar2.getTime())){
-            selectTime.setText( String.format("%02d:%02d",selectedHour,selectedMinute));
+        String kkk=selectDate.getText().toString();
+        String mmm=selectTime.getText().toString();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy",Locale.US);
+        final String dateOfAdd = sdf.format(new Date());
+        if (!(kkk.equals("select date"))){
+            if (dateOfAdd.equals(kkk)){
+                if (selectedHour > current.get(Calendar.HOUR_OF_DAY)){
+                    if (x.after(calendar1.getTime()) && x.before(calendar2.getTime())){
+                        selectTime.setText( String.format("%02d:%02d",selectedHour,selectedMinute));
+                    }
+                    else {
+                        Toast.makeText(getContext(),"Open time is from 08:00-22:00",Toast.LENGTH_LONG).show();
+                        selectTime.setText("select preferred start time");
+                    }
+                }
+                else {
+                    Toast.makeText(getContext(),"Please select a valid time",Toast.LENGTH_LONG).show();
+                    selectTime.setText("select preferred start time");
+                }
+            }
+            else {
+                if (x.after(calendar1.getTime()) && x.before(calendar2.getTime())){
+                    selectTime.setText( String.format("%02d:%02d",selectedHour,selectedMinute));
+                }
+                else {
+                    Toast.makeText(getContext(),"Open time is from 08:00-22:00",Toast.LENGTH_LONG).show();
+                    selectTime.setText("select preferred start time");
+                }
+            }
         }
         else {
-            Toast.makeText(getContext(),"Open time is from 08:00-22:00",Toast.LENGTH_LONG).show();
+                if (x.after(calendar1.getTime()) && x.before(calendar2.getTime())){
+                    selectTime.setText( String.format("%02d:%02d",selectedHour,selectedMinute));
+                }
+                else {
+                    Toast.makeText(getContext(),"Open time is from 08:00-22:00",Toast.LENGTH_LONG).show();
+                    selectTime.setText("select preferred start time");
+                }
         }
 
     }
@@ -189,20 +225,24 @@ public class ServiceDetailsFragment extends Fragment {
 //    }
 
     private void chooseDate() {
-        final Calendar mDate = Calendar.getInstance();
+        Calendar mDate = Calendar.getInstance();
         DatePickerDialog.OnDateSetListener date = (datePicker, year, month, day) -> {
-            mDate.set(Calendar.YEAR,year);
-            mDate.set(Calendar.MONTH,month);
-            mDate.set(Calendar.DAY_OF_MONTH,day);
-            String format = "dd/MM/yyyy";
-            SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
             Calendar c = Calendar.getInstance();
             c.set(Calendar.HOUR_OF_DAY,0);
             c.set(Calendar.MINUTE,0);
             c.set(Calendar.SECOND,0);
             c.set(Calendar.MILLISECOND,0);
             Date today= c.getTime();
-            if (mDate.before(today)){
+            mDate.set(Calendar.YEAR,year);
+            mDate.set(Calendar.MONTH,month);
+            mDate.set(Calendar.DAY_OF_MONTH,day);
+            c.set(Calendar.YEAR,year);
+            c.set(Calendar.MONTH,month);
+            c.set(Calendar.DAY_OF_MONTH,day);
+            Date dateSpecified=c.getTime();
+            String format = "dd/MM/yyyy";
+            SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
+            if (dateSpecified.before(today)){
                 Toast.makeText(mContext,"Please select a valid date",Toast.LENGTH_SHORT).show();
             }
             else {

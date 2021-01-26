@@ -1,19 +1,28 @@
 package com.derich.dondeva;
 
 public class RequestDetails {
-    String date,startTime,serviceName,username,requestDate,image,status;
+    String date,startTime,phoneNum,serviceName,username,requestDate,image,status;
 
     public RequestDetails() {
     }
 
-    public RequestDetails(String date, String startTime, String serviceName, String username, String requestDate, String image, String status) {
+    public RequestDetails(String date, String startTime, String phoneNum, String serviceName, String username, String requestDate, String image, String status) {
         this.date = date;
         this.startTime = startTime;
+        this.phoneNum = phoneNum;
         this.serviceName = serviceName;
         this.username = username;
         this.requestDate = requestDate;
         this.image = image;
         this.status = status;
+    }
+
+    public String getPhoneNum() {
+        return phoneNum;
+    }
+
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
     }
 
     public String getImage() {

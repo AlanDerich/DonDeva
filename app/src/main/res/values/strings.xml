@@ -9,7 +9,13 @@
     <string name="action_logout">Log Out</string>
     <string name="intent_image">intent_image</string>
     <string name="intent_product">intent_product</string>
-
+    <string name="action_today">Today</string>
+    <string name="action_day_view">Day view</string>
+    <string name="action_three_day_view">3 day view</string>
+    <string name="action_week_view">Week view</string>
+    <string name="title_activity_basic">Basic Example</string>
+    <string name="title_activity_asynchronous">Asynchronous Events</string>
+    <string name="async_error">Could not download events from the internet</string>
     <string name="menu_home">Home</string>
     <string name="menu_requests">Requests</string>
     <string name="menu_account">Account</string>
@@ -34,7 +40,7 @@
     <string name="service_name">Service Name</string>
     <string name="service_date">service date</string>
     <string name="time">time</string>
-    <string name="status">Status</string>
+    <string name="status">Status: </string>
     <string name="approve">Approve</string>
     <string name="help_fragment">Help fragment</string>
     <string name="help_insta">_don_deva</string>

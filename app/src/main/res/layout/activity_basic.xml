@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WeekViewActivity.BasicActivity"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#ffffff">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="90dp"
+                >
+
+                <LinearLayout
+                    android:id="@+id/calendar_header_Activity"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:weightSum="3">
+
+                    <LinearLayout
+                        android:id="@+id/day_view"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/shadow_17855">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/day_view_image"
+                                android:layout_width="60px"
+                                android:layout_height="60px"
+                                android:src="@drawable/calendar_day_selected">
+
+                            </androidx.appcompat.widget.AppCompatImageView>
+
+
+                            <TextView
+                                android:id="@+id/day_view_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_horizontal"
+                                android:text="Day"
+                                android:textColor="#bb1f2c"
+                                android:textSize="11sp">
+
+                            </TextView>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/week_view"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/shadow_115330"
+                        android:gravity="center_horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/week_view_image"
+                                android:layout_width="60px"
+                                android:layout_height="60px"
+                                android:src="@drawable/calendar_week">
+
+                            </androidx.appcompat.widget.AppCompatImageView>
+
+
+                            <TextView
+                                android:id="@+id/week_view_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_horizontal"
+                                android:text="Week"
+                                android:textColor="#534a4a4a"
+                                android:textSize="11sp">
+
+                            </TextView>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/month_view"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/shadow_115330"
+                        android:gravity="center_horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/month_view_image"
+                                android:layout_width="60px"
+                                android:layout_height="60px"
+                                android:src="@drawable/calendar_month">
+
+                            </androidx.appcompat.widget.AppCompatImageView>
+
+                            <TextView
+                                android:id="@+id/month_view_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_horizontal"
+                                android:text="Month"
+                                android:textColor="#534a4a4a"
+                                android:textSize="11sp">
+
+                            </TextView>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <com.derich.dondeva.WeekViewActivity.CalendarView.CalendarView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/calendarView"/>
+
+        <LinearLayout
+            android:visibility="visible"
+            android:id="@+id/dayview_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="100dp">
+
+            <ScrollView
+                android:id="@+id/ScrollBar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FFF"
+
+                >
+
+                <com.derich.dondeva.WeekViewActivity.CalendarView.CalendarDayView
+                    android:id="@+id/calendar_day_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:eventMarginLeft="0dp" />
+            </ScrollView>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/week_view_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ScrollView
+                android:id="@+id/weekScroll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FFF"
+
+                >
+
+                <com.derich.dondeva.WeekViewActivity.CalendarView.CalendarWeekView
+                    android:id="@+id/calendar_week_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="-3dp"
+                    app:dayHeight="@dimen/dayHeight"
+                    app:eventMarginLeft="0dp" />
+            </ScrollView>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

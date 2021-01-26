@@ -13,6 +13,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.derich.dondeva.ui.help.HelpFragment;
 import com.derich.dondeva.ui.requests.RequestsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.action_requests) {
             Bundle args = new Bundle();
             AppCompatActivity activity = this;
-            Fragment fragmentStaff = new RequestsFragment();
+            Fragment fragmentStaff = new HelpFragment();
             FragmentTransaction transactionStaff = activity.getSupportFragmentManager().beginTransaction();
             transactionStaff.replace(R.id.nav_host_fragment, fragmentStaff);
             transactionStaff.addToBackStack(null);

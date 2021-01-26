@@ -5,7 +5,7 @@ plugins {
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.1"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.derich.dondeva"
@@ -33,20 +33,20 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
-    implementation 'com.google.firebase:firebase-auth:20.0.0'
+    implementation 'com.google.firebase:firebase-auth:20.0.2'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.2'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
-    implementation 'androidx.mediarouter:mediarouter:1.2.0'
+    implementation 'androidx.mediarouter:mediarouter:1.2.1'
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
-    implementation 'com.google.firebase:firebase-firestore:22.0.0'
-    implementation 'com.google.firebase:firebase-storage:19.2.0'
+    implementation 'com.google.firebase:firebase-firestore:22.0.1'
+    implementation 'com.google.firebase:firebase-storage:19.2.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.navigation:navigation-fragment:2.3.1'
-    implementation 'androidx.navigation:navigation-ui:2.3.1'
+    implementation 'androidx.navigation:navigation-fragment:2.3.2'
+    implementation 'androidx.navigation:navigation-ui:2.3.2'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
     testImplementation 'junit:junit:4.+'

@@ -23,6 +23,12 @@
     <color name="whiteColor">#FFFFFF</color>
     <color name="lightGrey">#EFEBEB</color>
     <color name="emeralGreen">#25D690</color>
+    <color name="green">#008000</color>
     <color name="grey">#A2A2A3</color>
     <color name="light_grey">#F2E4E0EA</color>
+
+    <color name="grey_text">#403e3e66</color>
+    <color name="calendar_header">#403e3e</color>
+    <color name="eventColor">#ffeeef</color>
+    <color name="hsjd"></color>
 </resources>

@@ -67,7 +67,31 @@
                     android:textSize="15sp" />
 
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_layout_request_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
 
+                <TextView
+                    android:id="@+id/status_request_phone1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone:"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/status_request_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="Phone"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
             <LinearLayout
                 android:id="@+id/linear_layout_view_orders"
                 android:layout_width="wrap_content"
@@ -76,9 +100,18 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/status_view_orders1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/status"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <TextView
                     android:id="@+id/status_view_orders"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:text="@string/status"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
@@ -98,7 +131,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/approve"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/button_change_decline_orders"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Decline"
+                    android:textColor="@color/white"
                     android:textSize="15sp" />
 
             </LinearLayout>

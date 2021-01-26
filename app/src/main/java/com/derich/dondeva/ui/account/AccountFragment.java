@@ -110,8 +110,11 @@ public class AccountFragment extends Fragment {
                 });
             }
             //String uid = mUser.getUid();
-            if (!name.equals("")){
+            if (name!=null){
                 tvName.setText(name);}
+            else {
+                tvName.setText("Click here to set nickname");
+            }
             if (email!=null){
                 if (!email.equals(""))
                 {

@@ -1,6 +1,7 @@
 package com.derich.dondeva.ui.requests;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,10 +21,13 @@ import com.derich.dondeva.LoginActivity;
 import com.derich.dondeva.R;
 import com.derich.dondeva.RequestDetails;
 import com.derich.dondeva.UserDetails;
+import com.derich.dondeva.WeekViewActivity.BasicActivity;
+import com.derich.dondeva.ui.home.Services;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,21 +48,70 @@ public class RequestsFragment extends Fragment implements RequestsAdapter.OnItem
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_requests, container, false);
         rvOffers = root.findViewById(R.id.rv_requests);
-        mContext=getActivity();
-        checkUser();
+        mContext = getActivity();
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT| ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                RequestDetails mServ=mAdapter.getNoteAtPos(viewHolder.getAdapterPosition());
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+                alertDialog.setTitle("Delete");
+                alertDialog.setMessage("Do you want to delete this request?");
+                alertDialog.setPositiveButton("YES", (dialog, i) -> {
+                    {
+                        db.collection("RequestsStorage").document(encode(mServ.getDate())).collection("AllRequests").document(mServ.getUsername() + " " + mServ.getServiceName())
+                                .delete()
+                                .addOnSuccessListener(aVoid -> {
+//                                startActivity(new Intent(getContext(), MainActivityAdmin.class));
+                                    Toast.makeText(getContext(), "Request deleted successfully", Toast.LENGTH_LONG).show();
+                                   getOrders();
+
+                                })
+                                .addOnFailureListener(e -> Toast.makeText(getContext(), "Not deleted. Try again later.", Toast.LENGTH_LONG).show());
+                    }
+                    dialog.dismiss();
+                });
+
+                alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
+                alertDialog.show();
+            }
+        }).attachToRecyclerView(rvOffers);
         return root;
     }
 
-    private void getAllOrders() {
-        db.collectionGroup("AllRequests").get()
+    @Override
+    public void onPause() {
+        super.onPause();
+//        checkUser();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkUser();
+    }
+
+    private void getAllRequests() {
+        db.collectionGroup("AllRequests").orderBy("date", Query.Direction.DESCENDING).get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     mAllOrders = new ArrayList<>();
                     if (!queryDocumentSnapshots.isEmpty()) {
-                        for (DocumentSnapshot snapshot : queryDocumentSnapshots){
+                        for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
                             mAllOrders.add(snapshot.toObject(RequestDetails.class));
                         }
                     } else {
-                        Toast.makeText(mContext, "No Orders found. Orders you add will appear here", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "No requests found. Your requests will appear here", Toast.LENGTH_LONG).show();
                     }
                     initRecyclerview();
 
@@ -68,62 +123,65 @@ public class RequestsFragment extends Fragment implements RequestsAdapter.OnItem
     }
 
     private void initRecyclerview() {
-        mAdapter = new RequestsAdapter(mAllOrders,this,section);
+        mAdapter = new RequestsAdapter(mAllOrders, this, section);
 //        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
-        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(mContext);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         rvOffers.setLayoutManager(linearLayoutManager);
         rvOffers.setAdapter(mAdapter);
         rvOffers.setVisibility(View.VISIBLE);
     }
 
     private void checkUser() {
-        if (mUser!=null){
-            mUserr= new ArrayList<>();
+        if (mUser != null) {
+            mUserr = new ArrayList<>();
             final FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-            db.collectionGroup("registeredUsers").whereEqualTo("username",mUser.getEmail()).get().addOnSuccessListener(queryDocumentSnapshots -> {
+            db.collectionGroup("registeredUsers").whereEqualTo("username", mUser.getEmail()).get().addOnSuccessListener(queryDocumentSnapshots -> {
                 if (!queryDocumentSnapshots.isEmpty()) {
                     for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
                         mUserr.add(snapshot.toObject(UserDetails.class));
                     }
                     int size = mUserr.size();
                     int position;
-                    if (size==1){
-                        position=0;
-                        UserDetails userDetails= mUserr.get(position);
+                    if (size == 1) {
+                        position = 0;
+                        UserDetails userDetails = mUserr.get(position);
                         section = userDetails.getSection();
-                            if (section.equals("admin")){
-                                getAllOrders();
-                            }
-                            else {
-                                getUserOrders();
-                            }
+                        getOrders();
                     }
 
                 } else {
-                    Toast.makeText(mContext,"No bookings found." ,Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, "No bookings found.", Toast.LENGTH_LONG).show();
                 }
             })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(mContext,"Something went terribly wrong." + e,Toast.LENGTH_LONG).show();
-                        Log.d("kkk","Error" + e);
+                        Toast.makeText(mContext, "Something went terribly wrong." + e, Toast.LENGTH_LONG).show();
+                        Log.d("kkk", "Error" + e);
                     });
-        }
-        else {
-            Intent loginIntent=new Intent(mContext, LoginActivity.class);
+        } else {
+            Intent loginIntent = new Intent(mContext, LoginActivity.class);
             startActivity(loginIntent);
         }
     }
 
+    private void getOrders() {
+        if (section.equals("admin")) {
+            Intent intent=new Intent(getContext(), BasicActivity.class);
+            startActivity(intent);
+        } else {
+            getUserOrders();
+        }
+    }
+
     private void getUserOrders() {
-        db.collectionGroup("AllRequests").whereEqualTo("username",mUser.getEmail()).get()
+        db.collectionGroup("AllRequests").whereEqualTo("username", mUser.getEmail()).orderBy("date", Query.Direction.DESCENDING).get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     mAllOrders = new ArrayList<>();
                     if (!queryDocumentSnapshots.isEmpty()) {
-                        for (DocumentSnapshot snapshot : queryDocumentSnapshots){
+                        for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
                             mAllOrders.add(snapshot.toObject(RequestDetails.class));
                         }
                     } else {
-                        Toast.makeText(mContext, "No Orders found. Orders you add will appear here", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "No requests found. Your requests will appear here", Toast.LENGTH_LONG).show();
                     }
                     initRecyclerview();
 
@@ -135,16 +193,31 @@ public class RequestsFragment extends Fragment implements RequestsAdapter.OnItem
     }
 
     @Override
-    public void onItemsClick(RequestDetails mServ) {
-        RequestDetails mRequestDetails=new RequestDetails(mServ.getDate(),mServ.getStartTime(),mServ.getServiceName(),mServ.getUsername(),mServ.getRequestDate(),mServ.getImage(),"Approved");
-        db.collection("RequestsStorage").document(encode(mServ.getDate())).collection("AllRequests").document(mServ.getUsername()+" " +mServ.getServiceName())
-                .set(mRequestDetails)
-                .addOnSuccessListener(aVoid -> {
+    public void onItemsClick(RequestDetails mServ, String action) {
+        if (section.equals("admin")) {
+            if (action.equals("approve")) {
+                RequestDetails mRequestDetails = new RequestDetails(mServ.getDate(), mServ.getStartTime(),mServ.getPhoneNum(), mServ.getServiceName(), mServ.getUsername(), mServ.getRequestDate(), mServ.getImage(), "Approved");
+                db.collection("RequestsStorage").document(encode(mServ.getDate())).collection("AllRequests").document(mServ.getUsername() + " " + mServ.getServiceName())
+                        .set(mRequestDetails)
+                        .addOnSuccessListener(aVoid -> {
 //                                startActivity(new Intent(getContext(), MainActivityAdmin.class));
-                    Toast.makeText(getContext(),"Request approved successfully",Toast.LENGTH_LONG).show();
-                     getAllOrders();
+                            Toast.makeText(getContext(), "Request approved successfully", Toast.LENGTH_LONG).show();
+                            getAllRequests();
 
-                })
-                .addOnFailureListener(e -> Toast.makeText(getContext(),"Not saved. Try again later.",Toast.LENGTH_LONG).show());
+                        })
+                        .addOnFailureListener(e -> Toast.makeText(getContext(), "Not saved. Try again later.", Toast.LENGTH_LONG).show());
+            } else if (action.equals("decline")) {
+                RequestDetails mRequestDetails = new RequestDetails(mServ.getDate(), mServ.getStartTime(),mServ.getPhoneNum(), mServ.getServiceName(), mServ.getUsername(), mServ.getRequestDate(), mServ.getImage(), "Declined");
+                db.collection("RequestsStorage").document(encode(mServ.getDate())).collection("AllRequests").document(mServ.getUsername() + " " + mServ.getServiceName())
+                        .set(mRequestDetails)
+                        .addOnSuccessListener(aVoid -> {
+//                                startActivity(new Intent(getContext(), MainActivityAdmin.class));
+                            Toast.makeText(getContext(), "Request declined successfully", Toast.LENGTH_LONG).show();
+                            getAllRequests();
+
+                        })
+                        .addOnFailureListener(e -> Toast.makeText(getContext(), "Not saved. Try again later.", Toast.LENGTH_LONG).show());
+            }
+        }
     }
 }

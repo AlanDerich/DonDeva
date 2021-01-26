@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/weekHeight">
+    <LinearLayout
+        android:id="@+id/layoutwidth"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/weekHeight"
+        android:background="@drawable/day_bg"
+        >
+        <TextView
+            android:id="@+id/text_hour"
+            android:layout_width="35dp"
+            android:layout_height="@dimen/weekHeight"
+            android:gravity="center_vertical"
+            android:textSize="12sp"
+            android:textColor="#534a4a4a"
+            android:textAlignment="center"
+            android:text="00"
+            android:background="@drawable/hour_bg"
+            />
+
+        <RelativeLayout
+            android:id="@+id/separate_hour"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/weekHeight"
+            android:orientation="vertical"
+            android:layout_toRightOf="@+id/text_hour"
+            android:layout_toEndOf="@+id/text_hour">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/weekHeight"
+                android:orientation="vertical"
+                android:background="@drawable/day_bg">
+
+
+
+                <View
+                    android:layout_marginTop="@dimen/day"
+                    android:layout_width="match_parent"
+                    android:layout_height="3px"
+                    android:background="#EDF2F3">
+
+                </View>
+
+
+
+                <View
+                    android:layout_marginTop="@dimen/day"
+                    android:layout_width="match_parent"
+                    android:layout_height="3px"
+                    android:background="#EDF2F3">
+
+                </View>
+
+
+                <View
+                    android:layout_marginTop="@dimen/day"
+                    android:layout_width="match_parent"
+                    android:layout_height="3px"
+                    android:background="#EDF2F3">
+
+                </View>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/weekHeight"
+                android:orientation="horizontal"
+                android:weightSum="5"
+                >
+
+
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/week_view_bg"
+                    android:layout_weight="1">
+                </View>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/week_view_bg"
+                    android:layout_weight="1">
+                </View>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/week_view_bg"
+                    android:layout_weight="1">
+                </View>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/week_view_bg"
+                    android:layout_weight="1">
+                </View>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/week_view_bg"
+                    android:layout_weight="1">
+                </View>
+
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</RelativeLayout>

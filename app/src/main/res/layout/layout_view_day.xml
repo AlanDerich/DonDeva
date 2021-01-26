@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/linear_day_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="200px"
+                    android:background="@drawable/day_bg"
+                    >
+                    <TextView
+                        android:id="@+id/texthour"
+                        android:layout_width="40dp"
+                        android:layout_height="200px"
+                        android:gravity="center_vertical"
+                        android:textSize="12sp"
+                        android:textColor="#4a4a4a"
+                        android:textAlignment="center"
+                        android:text="00"
+                        android:background="@drawable/hour_bg"
+                        />
+
+                    <LinearLayout
+                        android:id="@+id/sepratorhr"
+                        android:layout_width="match_parent"
+                        android:layout_height="200px"
+                        android:orientation="vertical"
+                        android:layout_toRightOf="@+id/text_hour"
+                        android:layout_toEndOf="@+id/text_hour">
+
+                        <!--<TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="35px">
+                        </TextView>
+
+
+                        <View
+                            android:layout_marginLeft="40dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="3px"
+                            android:background="#EDF2F3">
+
+                        </View>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="35px">
+                        </TextView>
+
+
+                        <View
+                            android:layout_marginLeft="40dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="3px"
+                            android:background="#EDF2F3">
+
+                        </View>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="35px">
+                        </TextView>
+
+                        <View
+                            android:layout_marginLeft="40dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="3px"
+                            android:background="#EDF2F3">
+
+                        </View>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="35px">
+                        </TextView>
+-->
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+</LinearLayout>
