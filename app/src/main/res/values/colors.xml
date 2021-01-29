@@ -28,7 +28,8 @@
     <color name="light_grey">#F2E4E0EA</color>
 
     <color name="grey_text">#403e3e66</color>
-    <color name="calendar_header">#403e3e</color>
+    <color name="calendar_header">#660D8C</color>
+    <color name="calendar_color_day">#D97904</color>
     <color name="eventColor">#ffeeef</color>
     <color name="hsjd"></color>
 </resources>

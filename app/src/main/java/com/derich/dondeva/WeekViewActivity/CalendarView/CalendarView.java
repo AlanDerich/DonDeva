@@ -433,14 +433,14 @@ public class CalendarView extends LinearLayout {
         SimpleDateFormat outFormat1 = new SimpleDateFormat("EEEE");
         String st = outFormat1.format(currentDate.getTime());
         headerDay.setText(st);
-        headerDay.setTextColor(Color.parseColor("#bb1f2c"));
+        headerDay.setTextColor(Color.parseColor("#D97904"));
         headerDay.setBackgroundColor(Color.parseColor("#ffeeef"));
         dayViewDate.setText(String.valueOf(currentDate.get(Calendar.DAY_OF_MONTH)));
 
         if (monthNo == todayMonth && day == todayDay && yearNo == todayYear){
             dayViewDate.setBackgroundResource(R.drawable.today_date);
             headerDay.setTextColor(Color.parseColor("#ffffff"));
-            headerDay.setBackgroundColor(Color.parseColor("#bb1f2c"));
+            headerDay.setBackgroundColor(Color.parseColor("#D97904"));
         }else{
             dayViewDate.setBackgroundResource(R.drawable.day_bg);
         }
@@ -597,35 +597,35 @@ public class CalendarView extends LinearLayout {
 
     public void setDayColorDull(String day){
         if(day.equals("Monday")){
-            mondayView.setTextColor(Color.parseColor("#bb1f2c"));
+            mondayView.setTextColor(Color.parseColor("#D97904"));
             mondayView.setBackgroundColor(0);
-            mondayViewH.setTextColor(Color.parseColor("#bb1f2c"));
+            mondayViewH.setTextColor(Color.parseColor("#D97904"));
             mondayViewH.setBackgroundColor(0);
         }else if(day.equals("Tuesday")){
-            tuesdayView.setTextColor(Color.parseColor("#bb1f2c"));
+            tuesdayView.setTextColor(Color.parseColor("#D97904"));
             tuesdayView.setBackgroundColor(0);
-            tuesdayViewH.setTextColor(Color.parseColor("#bb1f2c"));
+            tuesdayViewH.setTextColor(Color.parseColor("#D97904"));
             tuesdayViewH.setBackgroundColor(0);
         }else if(day.equals("Wednesday")){
-            wednesdayView.setTextColor(Color.parseColor("#bb1f2c"));
+            wednesdayView.setTextColor(Color.parseColor("#D97904"));
             wednesdayView.setBackgroundColor(0);
-            wednesdayViewH.setTextColor(Color.parseColor("#bb1f2c"));
+            wednesdayViewH.setTextColor(Color.parseColor("#D97904"));
             wednesdayViewH.setBackgroundColor(0);
         }else if(day.equals("Thursday")){
-            thursdayView.setTextColor(Color.parseColor("#bb1f2c"));
+            thursdayView.setTextColor(Color.parseColor("#D97904"));
             thursdayView.setBackgroundColor(0);
-            thursdayViewH.setTextColor(Color.parseColor("#bb1f2c"));
+            thursdayViewH.setTextColor(Color.parseColor("#D97904"));
             thursdayViewH.setBackgroundColor(0);
         }else if(day.equals("Friday")){
-            fridayView.setTextColor(Color.parseColor("#bb1f2c"));
+            fridayView.setTextColor(Color.parseColor("#D97904"));
             fridayView.setBackgroundColor(0);
-            fridayViewH.setTextColor(Color.parseColor("#bb1f2c"));
+            fridayViewH.setTextColor(Color.parseColor("#D97904"));
             fridayViewH.setBackgroundColor(0);
         }else if(day.equals("Saturday")){
-            saturdayView.setTextColor(Color.parseColor("#bb1f2c"));
+            saturdayView.setTextColor(Color.parseColor("#D97904"));
             saturdayView.setBackgroundColor(0);
         }else if(day.equals("Sunday")){
-            sundayView.setTextColor(Color.parseColor("#bb1f2c"));
+            sundayView.setTextColor(Color.parseColor("#D97904"));
             sundayView.setBackgroundColor(0);
         }
     }
@@ -633,35 +633,35 @@ public class CalendarView extends LinearLayout {
     public void setDayColor(String day){
         if(day.equals("Monday")){
             mondayView.setTextColor(Color.parseColor("#ffffff"));
-            mondayView.setBackgroundColor(Color.parseColor("#bb1f2c"));
+            mondayView.setBackgroundColor(Color.parseColor("#D97904"));
             mondayViewH.setTextColor(Color.parseColor("#ffffff"));
-            mondayViewH.setBackgroundColor(Color.parseColor("#bb1f2c"));
+            mondayViewH.setBackgroundColor(Color.parseColor("#D97904"));
         }else if(day.equals("Tuesday")){
             tuesdayView.setTextColor(Color.parseColor("#ffffff"));
-            tuesdayView.setBackgroundColor(Color.parseColor("#bb1f2c"));
+            tuesdayView.setBackgroundColor(Color.parseColor("#D97904"));
             tuesdayViewH.setTextColor(Color.parseColor("#ffffff"));
-            tuesdayViewH.setBackgroundColor(Color.parseColor("#bb1f2c"));
+            tuesdayViewH.setBackgroundColor(Color.parseColor("#D97904"));
         }else if(day.equals("Wednesday")){
             wednesdayView.setTextColor(Color.parseColor("#ffffff"));
-            wednesdayView.setBackgroundColor(Color.parseColor("#bb1f2c"));
+            wednesdayView.setBackgroundColor(Color.parseColor("#D97904"));
             wednesdayViewH.setTextColor(Color.parseColor("#ffffff"));
-            wednesdayViewH.setBackgroundColor(Color.parseColor("#bb1f2c"));
+            wednesdayViewH.setBackgroundColor(Color.parseColor("#D97904"));
         }else if(day.equals("Thursday")){
             thursdayView.setTextColor(Color.parseColor("#ffffff"));
-            thursdayView.setBackgroundColor(Color.parseColor("#bb1f2c"));
+            thursdayView.setBackgroundColor(Color.parseColor("#D97904"));
             thursdayViewH.setTextColor(Color.parseColor("#ffffff"));
-            thursdayViewH.setBackgroundColor(Color.parseColor("#bb1f2c"));
+            thursdayViewH.setBackgroundColor(Color.parseColor("#D97904"));
         }else if(day.equals("Friday")){
             fridayView.setTextColor(Color.parseColor("#ffffff"));
-            fridayView.setBackgroundColor(Color.parseColor("#bb1f2c"));
+            fridayView.setBackgroundColor(Color.parseColor("#D97904"));
             fridayViewH.setTextColor(Color.parseColor("#ffffff"));
-            fridayViewH.setBackgroundColor(Color.parseColor("#bb1f2c"));
+            fridayViewH.setBackgroundColor(Color.parseColor("#D97904"));
         }else if(day.equals("Saturday")){
             saturdayView.setTextColor(Color.parseColor("#ffffff"));
-            saturdayView.setBackgroundColor(Color.parseColor("#bb1f2c"));
+            saturdayView.setBackgroundColor(Color.parseColor("#D97904"));
         }else if(day.equals("Sunday")){
             sundayView.setTextColor(Color.parseColor("#ffffff"));
-            sundayView.setBackgroundColor(Color.parseColor("#bb1f2c"));
+            sundayView.setBackgroundColor(Color.parseColor("#D97904"));
         }
     }
 

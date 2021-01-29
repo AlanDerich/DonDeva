@@ -21,8 +21,8 @@ import com.derich.dondeva.LoginActivity;
 import com.derich.dondeva.R;
 import com.derich.dondeva.RequestDetails;
 import com.derich.dondeva.UserDetails;
-import com.derich.dondeva.WeekViewActivity.BasicActivity;
-import com.derich.dondeva.ui.home.Services;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -49,6 +49,10 @@ public class RequestsFragment extends Fragment implements RequestsAdapter.OnItem
         View root = inflater.inflate(R.layout.fragment_requests, container, false);
         rvOffers = root.findViewById(R.id.rv_requests);
         mContext = getActivity();
+        BottomNavigationView navView = getActivity().findViewById(R.id.nav_view);
+        BadgeDrawable badgeDrawable= navView.getBadge(R.id.nav_requests);
+        badgeDrawable.setVisible(false);
+        badgeDrawable.clearNumber();
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT| ItemTouchHelper.RIGHT) {
             @Override
@@ -69,7 +73,7 @@ public class RequestsFragment extends Fragment implements RequestsAdapter.OnItem
                                 .addOnSuccessListener(aVoid -> {
 //                                startActivity(new Intent(getContext(), MainActivityAdmin.class));
                                     Toast.makeText(getContext(), "Request deleted successfully", Toast.LENGTH_LONG).show();
-                                   getOrders();
+                                   getIncomingIntent();
 
                                 })
                                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Not deleted. Try again later.", Toast.LENGTH_LONG).show());
@@ -89,6 +93,7 @@ public class RequestsFragment extends Fragment implements RequestsAdapter.OnItem
         }).attachToRecyclerView(rvOffers);
         return root;
     }
+
 
     @Override
     public void onPause() {
@@ -112,6 +117,26 @@ public class RequestsFragment extends Fragment implements RequestsAdapter.OnItem
                         }
                     } else {
                         Toast.makeText(mContext, "No requests found. Your requests will appear here", Toast.LENGTH_LONG).show();
+                    }
+                    initRecyclerview();
+
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(mContext, "Something went terribly wrong." + e, Toast.LENGTH_LONG).show();
+                    Log.d("HouseInfo", "error " + e);
+                });
+    }
+    private void getAllRequests(String date) {
+        db.collectionGroup("AllRequests").whereEqualTo("date",date).get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    mAllOrders = new ArrayList<>();
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
+                            mAllOrders.add(snapshot.toObject(RequestDetails.class));
+                        }
+                    } else {
+                        Toast.makeText(mContext, "No requests found for the specific date", Toast.LENGTH_LONG).show();
+                        getAllRequests();
                     }
                     initRecyclerview();
 
@@ -146,7 +171,7 @@ public class RequestsFragment extends Fragment implements RequestsAdapter.OnItem
                         position = 0;
                         UserDetails userDetails = mUserr.get(position);
                         section = userDetails.getSection();
-                        getOrders();
+                        getIncomingIntent();
                     }
 
                 } else {
@@ -163,15 +188,6 @@ public class RequestsFragment extends Fragment implements RequestsAdapter.OnItem
         }
     }
 
-    private void getOrders() {
-        if (section.equals("admin")) {
-            Intent intent=new Intent(getContext(), BasicActivity.class);
-            startActivity(intent);
-        } else {
-            getUserOrders();
-        }
-    }
-
     private void getUserOrders() {
         db.collectionGroup("AllRequests").whereEqualTo("username", mUser.getEmail()).orderBy("date", Query.Direction.DESCENDING).get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -182,6 +198,26 @@ public class RequestsFragment extends Fragment implements RequestsAdapter.OnItem
                         }
                     } else {
                         Toast.makeText(mContext, "No requests found. Your requests will appear here", Toast.LENGTH_LONG).show();
+                    }
+                    initRecyclerview();
+
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(mContext, "Something went terribly wrong." + e, Toast.LENGTH_LONG).show();
+                    Log.w("HouseInfo", "error " + e);
+                });
+    }
+    private void getUserOrders(String date) {
+        db.collectionGroup("AllRequests").whereEqualTo("date",date).whereEqualTo("username", mUser.getEmail()).get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    mAllOrders = new ArrayList<>();
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
+                            mAllOrders.add(snapshot.toObject(RequestDetails.class));
+                        }
+                    } else {
+                        Toast.makeText(mContext, "No requests found for that specific date", Toast.LENGTH_LONG).show();
+                        getUserOrders();
                     }
                     initRecyclerview();
 
@@ -217,6 +253,32 @@ public class RequestsFragment extends Fragment implements RequestsAdapter.OnItem
 
                         })
                         .addOnFailureListener(e -> Toast.makeText(getContext(), "Not saved. Try again later.", Toast.LENGTH_LONG).show());
+            }
+        }
+    }
+    private void getIncomingIntent() {
+        Bundle bundle = this.getArguments();
+//        Locale locale = new Locale("en","KE");
+//        NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
+        if (section.equals("admin")) {
+            if(bundle != null){
+                String name=bundle.getString("fromAdmin");
+                if (name.equals("fromAdmin")){
+                    getAllRequests(bundle.getString("dateToLoad"));
+                }
+            }
+            else{
+                getAllRequests();
+            }
+        } else {
+            if(bundle != null){
+                String name=bundle.getString("fromAdmin");
+                if (name.equals("fromAdmin")){
+                    getUserOrders(bundle.getString("dateToLoad"));
+                }
+            }
+            else{
+                getUserOrders();
             }
         }
     }

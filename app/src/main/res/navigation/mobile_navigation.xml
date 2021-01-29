@@ -38,4 +38,9 @@
         android:name="com.derich.dondeva.ui.account.AccountFragment"
         android:label="@string/menu_account"
         tools:layout="@layout/fragment_account" />
+    <fragment
+        android:id="@+id/nav_calendar"
+        android:name="com.derich.dondeva.ui.calendar.RequestsCalendarFragment"
+        android:label="@string/menu_calendar"
+        tools:layout="@layout/fragment_requests_calendar" />
 </navigation>
