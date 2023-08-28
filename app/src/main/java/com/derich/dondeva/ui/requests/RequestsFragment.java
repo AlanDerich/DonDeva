@@ -50,9 +50,13 @@ public class RequestsFragment extends Fragment implements RequestsAdapter.OnItem
         rvOffers = root.findViewById(R.id.rv_requests);
         mContext = getActivity();
         BottomNavigationView navView = getActivity().findViewById(R.id.nav_view);
-        BadgeDrawable badgeDrawable= navView.getBadge(R.id.nav_requests);
-        badgeDrawable.setVisible(false);
-        badgeDrawable.clearNumber();
+        if(navView.getBadge(R.id.nav_requests) !=null){
+            BadgeDrawable badgeDrawable= navView.getBadge(R.id.nav_requests);
+            assert badgeDrawable != null;
+            badgeDrawable.setVisible(false);
+            badgeDrawable.clearNumber();
+        }
+
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT| ItemTouchHelper.RIGHT) {
             @Override
